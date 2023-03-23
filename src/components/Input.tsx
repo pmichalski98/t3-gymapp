@@ -1,6 +1,6 @@
 import React, { type ChangeEvent } from "react";
 import classNames from "classnames";
-import { type FormData } from "../types/trainings";
+import { type FormData } from "~/types/training";
 
 interface Props {
   className?: string;
