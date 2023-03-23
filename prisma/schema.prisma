@@ -1,18 +1,48 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-    datasource db {
-      provider     = "mysql"
-      url          = env("DATABASE_URL")
-      relationMode = "prisma"
-    }
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
 
 generator client {
-    provider = "prisma-client-ts" //If you want to use TypeScript, use "prisma-client-ts"
-    previewFeatures = ["ReferentialIntegrity"]
+  provider        = "prisma-client-js" //If you want to use TypeScript, use "prisma-client-ts"
 }
 
 model User {
-    id String @id @default(uuid())
-    createdAt DateTime @default(now())
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  trainings Training[]
+}
+
+model Training {
+  id            String         @id @default(uuid())
+  label         String         @db.VarChar(255)
+  exercises     Exercise[]
+  trainingUnits TrainingUnit[]
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TrainingUnit {
+  id         String     @id @default(uuid())
+  exercises  Exercise[]
+  createdAt  DateTime
+  endedAt    DateTime
+  training   Training   @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  trainingId String
+}
+
+model Exercise {
+  id             String        @id @default(uuid())
+  label           String?       @db.VarChar(255)
+  sets           Int?          @default(0)
+  reps           Int?          @default(0)
+  weight         Int?          @default(0)
+  training       Training      @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  trainingId     String
+  trainingUnit   TrainingUnit? @relation(fields: [trainingUnitId], references: [id], onDelete: Cascade)
+  trainingUnitId String?
 }
