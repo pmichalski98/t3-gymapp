@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignIn, SignOutButton, useUser } from "@clerk/nextjs";
 import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
 import { useRouter } from "next/router";
-
 function Navbar() {
   const { isSignedIn } = useUser();
 
@@ -11,9 +10,9 @@ function Navbar() {
 
   const links = [
     { label: "Stats", path: "/stats" },
-    { label: "Plany", path: "/trainings" },
-    { label: "Start", path: "/" },
-    { label: "Pomiary", path: "/body" },
+    { label: "Trainings", path: "/trainings" },
+    { label: "Home", path: "/home" },
+    { label: "Body", path: "/body" },
   ];
 
   const notActive =
@@ -33,17 +32,13 @@ function Navbar() {
   return (
     <nav className="flex justify-center justify-around border-b-4 border-lightCyan pt-3 pb-2 ">
       {renderedLinks}
-      {isSignedIn ? (
+      {
         <>
           <ButtonStyleWrapper>
             <SignOutButton />
           </ButtonStyleWrapper>
         </>
-      ) : (
-        <ButtonStyleWrapper>
-          <SignInButton />
-        </ButtonStyleWrapper>
-      )}
+      }
     </nav>
   );
 }
