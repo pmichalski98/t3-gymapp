@@ -140,20 +140,18 @@ function Id() {
     <>
       <div className="container mx-auto my-14 w-fit ">
         <h1 className="mb-10 p-4 text-center text-5xl capitalize">
-          {updatedTraining?.label}
+          {training.label}
         </h1>
         <form
           className="container mx-auto grid inline-grid max-w-3xl grid-cols-6 gap-4 text-center"
           onSubmit={handleSaveBtn}
         >
-          <TrainingTable
-            config={config}
-            data={
-              updatedTraining === undefined
-                ? training.exercises
-                : updatedTraining.exercises
-            }
-          />
+          <>
+            <TrainingTable
+              config={config}
+              data={updatedTraining && updatedTraining.exercises}
+            />
+          </>
         </form>
         <div className="flex place-content-end ">
           <Button
