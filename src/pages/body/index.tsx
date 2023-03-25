@@ -1,7 +1,8 @@
 import React from "react";
+import ContentLayout from "~/components/ContentLayout";
 
 function Index() {
-  return <div>Body measurements page</div>;
+  return <ContentLayout>Body measurements page</ContentLayout>;
 }
 
 export default Index;

@@ -1,6 +1,6 @@
 export interface Exercise {
   id?: string;
-  name: string;
+  label: string;
   sets?: number;
   reps?: number;
   weight?: number;

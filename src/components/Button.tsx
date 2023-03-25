@@ -23,13 +23,14 @@ function Button({
   const classes = classNames(
     "flex justify-center items-center text-white",
     "shadow-2xl text-backgroundBlue ",
-    "hover:text-bg focus:outline-cyan outline-none px-3 py-1.5 rounded",
+    "focus:outline-cyan outline-none px-3 py-1.5 rounded",
     {
-      "border-cyan bg-gradient-to-r from-darkOcean to-lightCyan":
+      "border-cyan bg-gradient-to-r from-darkOcean to-lightCyan hover:text-bg hover:outline-slate-400":
         variant === "primary",
-      "border-2 border-cyan bg-backgroundBlue text-white":
+      "border-2 border-lightCyan bg-backgroundBlue text-white hover:text-lightCyan hover:border-black":
         variant === "secondary",
-      "border-cyan bg-darkerCyan text-black": variant === "success",
+      "border-cyanLight bg-darkCyan text-black hover:outline-white hover:text-bg":
+        variant === "success",
       "border-2": outlined,
       "rounded-full": rounded,
     },

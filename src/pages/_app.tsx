@@ -23,7 +23,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   // Maybe I will add some public pages
   return (
-    <div className="h-screen bg-primary text-slate-200">
+    <div className="min-h-screen bg-primary text-slate-200">
       <ClerkProvider
         appearance={{
           baseTheme: dark,

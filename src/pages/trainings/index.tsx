@@ -1,7 +1,8 @@
 import React from "react";
+import ContentLayout from "~/components/ContentLayout";
 
 function Index() {
-  return <div>plans</div>;
+  return <ContentLayout>plans</ContentLayout>;
 }
 
 export default Index;

@@ -4,7 +4,7 @@ import { type FormData } from "~/types/training";
 
 interface Props {
   className?: string;
-  value: string | number | undefined;
+  value: string | number;
   name?: string;
   type: "text" | "number" | "email" | "password";
   placeholder?: string;

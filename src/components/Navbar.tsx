@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { SignIn, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignOutButton } from "@clerk/nextjs";
 import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
 import { useRouter } from "next/router";
 function Navbar() {
-  const { isSignedIn } = useUser();
-
   const router = useRouter();
   const currentRoute = router.pathname;
 
@@ -30,7 +28,7 @@ function Navbar() {
   ));
 
   return (
-    <nav className="flex justify-center justify-around border-b-4 border-lightCyan pt-3 pb-2 ">
+    <nav className="sticky top-0 flex justify-center justify-around border-b-4 border-lightCyan pt-3 pb-2">
       {renderedLinks}
       {
         <>

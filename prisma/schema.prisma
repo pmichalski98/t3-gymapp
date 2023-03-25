@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
   provider     = "mysql"
@@ -8,7 +6,7 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js" //If you want to use TypeScript, use "prisma-client-ts"
+  provider        = "prisma-client-js"
 }
 
 model User {
@@ -37,10 +35,10 @@ model TrainingUnit {
 
 model Exercise {
   id             String        @id @default(uuid())
-  label           String?       @db.VarChar(255)
-  sets           Int?          @default(0)
-  reps           Int?          @default(0)
-  weight         Int?          @default(0)
+  label           String       @db.VarChar(255)
+  sets           Int          @default(3)
+  reps           Int         @default(3)
+  weight         Int         @default(12)
   training       Training      @relation(fields: [trainingId], references: [id], onDelete: Cascade)
   trainingId     String
   trainingUnit   TrainingUnit? @relation(fields: [trainingUnitId], references: [id], onDelete: Cascade)
