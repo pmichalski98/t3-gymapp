@@ -6,7 +6,7 @@ import Link from "next/link";
 import ContentLayout from "~/components/ContentLayout";
 import Button from "~/components/Button";
 import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
-import { type ChangeEvent, ReactNode, useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import { type Exercise } from "@prisma/client";
 import Input from "~/components/Input";
 
@@ -138,6 +138,7 @@ export function AddTraining({
 }
 
 import { GoTrashcan } from "react-icons/go";
+import { useUser } from "@clerk/nextjs";
 interface Props {
   exercises: Pick<Exercise, "label">[];
   onDelete?: (index: number) => void;

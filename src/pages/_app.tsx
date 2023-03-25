@@ -1,7 +1,7 @@
 import { type AppType } from "next/app";
 
 import { api } from "~/utils/api";
-
+import "react-toastify/dist/ReactToastify.css";
 import "~/styles/globals.css";
 import {
   ClerkProvider,
@@ -12,6 +12,8 @@ import {
 import Navbar from "~/components/Navbar";
 import { useRouter } from "next/router";
 import { dark } from "@clerk/themes";
+import { ToastContainer } from "react-toastify";
+import React from "react";
 
 const publicPages: Array<string> = [];
 
@@ -44,6 +46,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             </SignedOut>
           </>
         )}
+        <ToastContainer autoClose={1000} />
       </ClerkProvider>
     </div>
   );

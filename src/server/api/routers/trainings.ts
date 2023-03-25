@@ -70,6 +70,12 @@ export const trainingsRouter = createTRPCRouter({
       return training;
     }),
   getAll: privateProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUnique({
+      where: { id: ctx.userId },
+    });
+    if (!user) {
+      await ctx.prisma.user.create({ data: { id: ctx.userId } });
+    }
     const trainings = await ctx.prisma.training.findMany({
       where: { userId: ctx.userId },
     });

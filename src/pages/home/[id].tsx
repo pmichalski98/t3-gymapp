@@ -7,11 +7,17 @@ import Button from "~/components/Button";
 import TrainingTable from "~/components/TrainingTable";
 import { type Exercise } from "@prisma/client";
 import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 function Id() {
   const [editRow, setEditRow] = useState<number | null>(null);
   const [formData, setFormData] = useState<Exercise>({} as Exercise);
-  const { mutate } = api.trainings.editTraining.useMutation();
+  const { mutate, isLoading: addTrainingLoading } =
+    api.trainings.editTraining.useMutation({
+      onSuccess: () => {
+        toast.success("Training updated successfully");
+      },
+    });
   const router = useRouter();
   const { id } = router.query;
 
@@ -159,6 +165,7 @@ function Id() {
             variant="primary"
             rounded
             onClick={submitTraining}
+            disabled={addTrainingLoading}
           >
             Save training
           </Button>
