@@ -5,14 +5,14 @@ import type { FormData } from "~/types/training";
 import Input from "~/components/Input";
 import Button from "~/components/Button";
 import TrainingTable from "~/components/TrainingTable";
-import { type Exercise } from "@prisma/client";
+import { type Exercise, type Training } from "@prisma/client";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 function Id() {
   const [editRow, setEditRow] = useState<number | null>(null);
   const [formData, setFormData] = useState<Exercise>({} as Exercise);
-  const { mutate, isLoading: addTrainingLoading } =
+  const { mutate, isLoading: editTrainingLoading } =
     api.trainings.editTraining.useMutation({
       onSuccess: () => {
         toast.success("Training updated successfully");
@@ -29,11 +29,14 @@ function Id() {
     error,
   } = api.trainings.getChosen.useQuery(id);
 
-  const [updatedTraining, setUpdatedTraining] = useState(training);
+  const [updatedTraining, setUpdatedTraining] = useState<
+    Training & { exercises: Exercise[] }
+  >();
 
   if (error) return <div>Something went wrong ...</div>;
   if (isLoading)
     return <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />;
+  if (training && updatedTraining === undefined) setUpdatedTraining(training);
 
   function handleEditFormChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -48,7 +51,6 @@ function Id() {
       [fieldName]: fieldName === "label" ? fieldValue : Number(fieldValue),
     });
   }
-
   function handleEditBtn(exercise: Exercise, index: number): void {
     setEditRow(index);
     setFormData({ ...exercise });
@@ -141,9 +143,8 @@ function Id() {
         ),
     },
   ];
-
-  const contentBeforeTrainingStarted: JSX.Element = (
-    <>
+  return (
+    <div className=" container mx-auto grid w-10/12 content-center gap-4 ">
       <div className="container mx-auto my-14 w-fit ">
         <h1 className="mb-10 p-4 text-center text-5xl capitalize">
           {training.label}
@@ -165,7 +166,7 @@ function Id() {
             variant="primary"
             rounded
             onClick={submitTraining}
-            disabled={addTrainingLoading}
+            disabled={editTrainingLoading}
           >
             Save training
           </Button>
@@ -177,12 +178,6 @@ function Id() {
       >
         START TRAINING
       </Button>
-    </>
-  );
-
-  return (
-    <div className=" container mx-auto grid w-10/12 content-center gap-4 ">
-      {contentBeforeTrainingStarted}
     </div>
   );
 }
