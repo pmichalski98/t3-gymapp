@@ -28,11 +28,11 @@ function Navbar() {
   ));
 
   return (
-    <nav className="sticky top-0 flex justify-center justify-around border-b-4 border-lightCyan pt-3 pb-2">
+    <nav className="sticky top-0 flex justify-center justify-around border-b-4 border-lightCyan px-1 pt-3 pb-1">
       {renderedLinks}
       {
         <>
-          <ButtonStyleWrapper>
+          <ButtonStyleWrapper className="m-0 flex-nowrap px-[5px] py-1">
             <SignOutButton />
           </ButtonStyleWrapper>
         </>

@@ -9,6 +9,7 @@ import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
 import { type ChangeEvent, useState } from "react";
 import { type Exercise } from "@prisma/client";
 import Input from "~/components/Input";
+import { GiCancel } from "react-icons/gi";
 
 const Home: NextPage = () => {
   const { data, isLoading, error } = api.trainings.getAll.useQuery();
@@ -103,9 +104,15 @@ export function AddTraining({
   }
   return (
     <div className="mx-auto mt-6 max-w-4xl rounded border-4 border-darkCyan p-8 text-center">
+      <GiCancel
+        className="relative bottom-4 h-6 w-6"
+        onClick={() => closeWindow(false)}
+      >
+        Cancel
+      </GiCancel>
       <div className="pb-8">
         <Input
-          className="my-2 mx-auto block max-w-sm text-3xl"
+          className="my-2 mx-auto block max-w-sm text-xl"
           onChange={trainingOnChange}
           type="text"
           value={trainingName}
@@ -113,7 +120,7 @@ export function AddTraining({
           required
         />
         <Input
-          className="my-2 mt-4 max-w-xs"
+          className="my-2 mt-4 max-w-xs text-sm"
           onChange={exerciseOnChange}
           type="text"
           value={exerciseName}
@@ -130,7 +137,7 @@ export function AddTraining({
         </Button>
       </div>
       {exercises.length > 0 && (
-        <form className="mt-10   text-center" onSubmit={handleAddTraining}>
+        <form className=" text-center" onSubmit={handleAddTraining}>
           <div className="flex flex-col items-center ">
             <ShowExercises
               exercises={exercises}

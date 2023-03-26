@@ -146,48 +146,43 @@ function Id() {
     },
   ];
   return (
-    <div className=" container mx-auto grid w-10/12 content-center gap-4 ">
+    <div className="mx-auto my-6 max-w-3xl px-2 text-center">
       {isLoading ? (
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
       ) : (
         <>
-          <div className="mx-auto my-14 w-11/12 max-w-3xl text-center">
-            <Button variant={"primary"} rounded onClick={() => router.back()}>
-              Go Back
-            </Button>
-            <h1 className="mb-10 p-4 text-center text-5xl capitalize">
-              {training.label}
-            </h1>
-            <form
-              className="container mx-auto grid inline-grid max-w-3xl grid-cols-6 gap-4 text-center"
-              onSubmit={handleSaveBtn}
+          <Button variant={"primary"} rounded onClick={() => router.back()}>
+            Go Back
+          </Button>
+          <h1 className="my-6 p-4 text-center text-5xl capitalize">
+            {training.label}
+          </h1>
+          <form
+            className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr_1fr] gap-4 px-2 text-center text-sm"
+            onSubmit={handleSaveBtn}
+          >
+            <>
+              <TrainingTable
+                config={config}
+                data={updatedTraining && updatedTraining.exercises}
+              />
+            </>
+          </form>
+          <div className="flex place-content-end ">
+            <Button
+              className="mt-10"
+              variant="primary"
+              rounded
+              onClick={submitTraining}
+              disabled={editTrainingLoading}
             >
-              <>
-                <TrainingTable
-                  config={config}
-                  data={updatedTraining && updatedTraining.exercises}
-                />
-              </>
-            </form>
-            <div className="flex place-content-end ">
-              <Button
-                className="mt-10"
-                variant="primary"
-                rounded
-                onClick={submitTraining}
-                disabled={editTrainingLoading}
-              >
-                {editTrainingLoading ? (
-                  <ClipLoader size={20} />
-                ) : (
-                  "Save Training"
-                )}
-              </Button>
-            </div>
+              {editTrainingLoading ? <ClipLoader size={20} /> : "Save Training"}
+            </Button>
           </div>
+
           <Button
             variant="primary"
-            className="mx-auto mt-10 rounded px-9 py-6 text-6xl"
+            className="mx-auto mt-10 rounded px-9 py-6 text-3xl"
           >
             START TRAINING
           </Button>
