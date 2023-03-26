@@ -12,12 +12,6 @@ import { toast } from "react-toastify";
 function Id() {
   const [editRow, setEditRow] = useState<number | null>(null);
   const [formData, setFormData] = useState<Exercise>({} as Exercise);
-  const { mutate, isLoading: editTrainingLoading } =
-    api.trainings.editTraining.useMutation({
-      onSuccess: () => {
-        toast.success("Training updated successfully");
-      },
-    });
   const router = useRouter();
   const { id } = router.query;
 
@@ -28,6 +22,18 @@ function Id() {
     isLoading,
     error,
   } = api.trainings.getChosen.useQuery(id);
+
+  const utils = api.useContext();
+  const { mutate, isLoading: editTrainingLoading } =
+    api.trainings.editTraining.useMutation({
+      onMutate: () => {
+        toast("Updating training ...");
+      },
+      onSuccess: async () => {
+        toast.success("Training updated successfully");
+        await utils.trainings.invalidate();
+      },
+    });
 
   const [updatedTraining, setUpdatedTraining] = useState<
     Training & { exercises: Exercise[] }
