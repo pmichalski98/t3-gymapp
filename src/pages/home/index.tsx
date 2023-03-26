@@ -16,36 +16,43 @@ const Home: NextPage = () => {
 
   if (error) return <div>Something went wrong ...</div>;
 
+  //auto-cols-fr
   return (
     <ContentLayout>
-      {isLoading && (
+      {isLoading ? (
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
+      ) : (
+        <>
+          <h1 className="text-3xl">Choose training:</h1>
+          <div className="flex-wrap justify-center py-4 md:flex ">
+            {data &&
+              data.map((training) => (
+                <ButtonStyleWrapper
+                  className="my-4 py-10 text-6xl md:mx-4 md:basis-1/3 "
+                  key={training.id}
+                >
+                  <Link
+                    href={{
+                      pathname: "/home/[id]",
+                      query: { id: training.id },
+                    }}
+                  >
+                    {training.label}
+                  </Link>
+                </ButtonStyleWrapper>
+              ))}
+          </div>
+          <Button
+            onClick={() => setIsAdding(!isAdding)}
+            variant="secondary"
+            className="mx-auto"
+          >
+            Add Training +
+          </Button>
+          {isAdding && <AddTraining closeWindow={setIsAdding} />}
+          <h3 className="pt-20">Some training history there : </h3>
+        </>
       )}
-      <h1 className="text-3xl">Choose training:</h1>
-      <div className="p-120 grid grid-flow-row gap-16 p-20 md:grid-flow-col">
-        {data &&
-          data.map((training) => (
-            <ButtonStyleWrapper className="py-10 text-6xl" key={training.id}>
-              <Link
-                href={{
-                  pathname: "/home/[id]",
-                  query: { id: training.id },
-                }}
-              >
-                {training.label}
-              </Link>
-            </ButtonStyleWrapper>
-          ))}
-      </div>
-      <Button
-        onClick={() => setIsAdding(!isAdding)}
-        variant="secondary"
-        className="mx-auto"
-      >
-        Add Training +
-      </Button>
-      {isAdding && <AddTraining closeWindow={setIsAdding} />}
-      <h3 className="pt-20">Some training history there : </h3>
     </ContentLayout>
   );
 };
@@ -59,7 +66,13 @@ export function AddTraining({
   const [exercises, setExercises] = useState<Pick<Exercise, "label">[]>([]);
   const [exerciseName, setExerciseName] = useState("");
   const [trainingName, setTrainingName] = useState("");
-  const { mutate } = api.trainings.addTraining.useMutation();
+  const utils = api.useContext();
+  const { mutate } = api.trainings.addTraining.useMutation({
+    onSuccess: async () => {
+      await utils.trainings.getAll.invalidate();
+      toast.success("Training added successfully");
+    },
+  });
 
   function exerciseOnChange(event: ChangeEvent<HTMLInputElement>) {
     setExerciseName(event.target.value);
@@ -89,47 +102,48 @@ export function AddTraining({
     setExercises(exercisesAfterDelete);
   }
   return (
-    <div className="mx-auto mt-6 p-4 text-center">
-      <Input
-        className="my-2 max-w-fit text-3xl"
-        onChange={trainingOnChange}
-        type="text"
-        value={trainingName}
-        placeholder="Nazwa treningu"
-        required
-      />
-      <Input
-        className="my-2 mt-4 max-w-xs"
-        onChange={exerciseOnChange}
-        type="text"
-        value={exerciseName}
-        placeholder="Nazwa cwiczenia"
-        required
-      />
-      <Button
-        onClick={handleAddingExercise}
-        className="mx-auto mt-4"
-        variant="primary"
-        rounded
-      >
-        Add exercise
-      </Button>
-      {exercises.length > 0 && (
-        <form
-          className="mt-10 grid inline-grid rounded border px-20 py-4 "
-          onSubmit={handleAddTraining}
+    <div className="mx-auto mt-6 max-w-4xl rounded border-4 border-darkCyan p-8 text-center">
+      <div className="pb-8">
+        <Input
+          className="my-2 mx-auto block max-w-sm text-3xl"
+          onChange={trainingOnChange}
+          type="text"
+          value={trainingName}
+          placeholder="Nazwa treningu"
+          required
+        />
+        <Input
+          className="my-2 mt-4 max-w-xs"
+          onChange={exerciseOnChange}
+          type="text"
+          value={exerciseName}
+          placeholder="Nazwa cwiczenia"
+          required
+        />
+        <Button
+          onClick={handleAddingExercise}
+          className="mx-auto mt-4"
+          variant="primary"
+          rounded
         >
-          <ShowExercises
-            exercises={exercises}
-            onDelete={handleExerciseDelete}
-          />
+          Add exercise
+        </Button>
+      </div>
+      {exercises.length > 0 && (
+        <form className="mt-10   text-center" onSubmit={handleAddTraining}>
+          <div className="flex flex-col items-center ">
+            <ShowExercises
+              exercises={exercises}
+              onDelete={handleExerciseDelete}
+            />
+          </div>
           <Button
             type="submit"
             variant="success"
             rounded
-            className="mx-auto mt-4"
+            className="mx-auto mt-4 text-xl"
           >
-            Add training
+            Create training
           </Button>
         </form>
       )}
@@ -138,7 +152,7 @@ export function AddTraining({
 }
 
 import { GoTrashcan } from "react-icons/go";
-import { useUser } from "@clerk/nextjs";
+import { toast } from "react-toastify";
 interface Props {
   exercises: Pick<Exercise, "label">[];
   onDelete?: (index: number) => void;

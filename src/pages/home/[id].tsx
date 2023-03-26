@@ -26,9 +26,6 @@ function Id() {
   const utils = api.useContext();
   const { mutate, isLoading: editTrainingLoading } =
     api.trainings.editTraining.useMutation({
-      onMutate: () => {
-        toast("Updating training ...");
-      },
       onSuccess: async () => {
         toast.success("Training updated successfully");
         await utils.trainings.invalidate();
@@ -40,8 +37,7 @@ function Id() {
   >();
 
   if (error) return <div>Something went wrong ...</div>;
-  if (isLoading)
-    return <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />;
+
   if (training && updatedTraining === undefined) setUpdatedTraining(training);
 
   function handleEditFormChange(
@@ -151,39 +147,52 @@ function Id() {
   ];
   return (
     <div className=" container mx-auto grid w-10/12 content-center gap-4 ">
-      <div className="container mx-auto my-14 w-fit ">
-        <h1 className="mb-10 p-4 text-center text-5xl capitalize">
-          {training.label}
-        </h1>
-        <form
-          className="container mx-auto grid inline-grid max-w-3xl grid-cols-6 gap-4 text-center"
-          onSubmit={handleSaveBtn}
-        >
-          <>
-            <TrainingTable
-              config={config}
-              data={updatedTraining && updatedTraining.exercises}
-            />
-          </>
-        </form>
-        <div className="flex place-content-end ">
+      {isLoading ? (
+        <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
+      ) : (
+        <>
+          <div className="mx-auto my-14 w-11/12 max-w-3xl text-center">
+            <Button variant={"primary"} rounded onClick={() => router.back()}>
+              Go Back
+            </Button>
+            <h1 className="mb-10 p-4 text-center text-5xl capitalize">
+              {training.label}
+            </h1>
+            <form
+              className="container mx-auto grid inline-grid max-w-3xl grid-cols-6 gap-4 text-center"
+              onSubmit={handleSaveBtn}
+            >
+              <>
+                <TrainingTable
+                  config={config}
+                  data={updatedTraining && updatedTraining.exercises}
+                />
+              </>
+            </form>
+            <div className="flex place-content-end ">
+              <Button
+                className="mt-10"
+                variant="primary"
+                rounded
+                onClick={submitTraining}
+                disabled={editTrainingLoading}
+              >
+                {editTrainingLoading ? (
+                  <ClipLoader size={20} />
+                ) : (
+                  "Save Training"
+                )}
+              </Button>
+            </div>
+          </div>
           <Button
-            className="mt-10"
             variant="primary"
-            rounded
-            onClick={submitTraining}
-            disabled={editTrainingLoading}
+            className="mx-auto mt-10 rounded px-9 py-6 text-6xl"
           >
-            Save training
+            START TRAINING
           </Button>
-        </div>
-      </div>
-      <Button
-        variant="primary"
-        className="mx-auto mt-10 rounded px-9 py-6 text-6xl"
-      >
-        START TRAINING
-      </Button>
+        </>
+      )}
     </div>
   );
 }
