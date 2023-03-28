@@ -21,7 +21,7 @@ function Id() {
     data: training,
     isLoading,
     error,
-  } = api.trainings.getChosen.useQuery(id);
+  } = api.trainings.getById.useQuery(id);
 
   const utils = api.useContext();
   const { mutate, isLoading: editTrainingLoading } =

@@ -6,16 +6,27 @@ import Link from "next/link";
 import ContentLayout from "~/components/ContentLayout";
 import Button from "~/components/Button";
 import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
-import { type ChangeEvent, useState } from "react";
+import React, { type ChangeEvent, DOMElement, useState } from "react";
 import { type Exercise } from "@prisma/client";
 import Input from "~/components/Input";
 import { GiCancel } from "react-icons/gi";
 
 const Home: NextPage = () => {
+  const utils = api.useContext();
   const { data, isLoading, error } = api.trainings.getAll.useQuery();
+  const { mutate: deleteTraining, isLoading: deleteLoading } =
+    api.trainings.deleteByid.useMutation({
+      onSuccess: async () => {
+        await utils.trainings.invalidate();
+        toast("Training deleted", { type: "success" });
+      },
+    });
   const [isAdding, setIsAdding] = useState(false);
+  const [expandedIndex, setExpandedIndex] = useState(NaN);
+  const handleTrainingClick = (index: number) =>
+    index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
 
-  if (error) return <div>Something went wrong ...</div>;
+  if (error) return <div>Something went wrong...</div>;
 
   //auto-cols-fr
   return (
@@ -25,23 +36,36 @@ const Home: NextPage = () => {
       ) : (
         <>
           <h1 className="text-3xl">Choose training:</h1>
-          <div className="flex-wrap justify-center py-4 md:flex ">
+          <div className="">
             {data &&
-              data.map((training) => (
-                <ButtonStyleWrapper
-                  className="my-4 py-10 text-6xl md:mx-4 md:basis-1/3 "
-                  key={training.id}
-                >
-                  <Link
-                    href={{
-                      pathname: "/home/[id]",
-                      query: { id: training.id },
-                    }}
-                  >
-                    {training.label}
-                  </Link>
-                </ButtonStyleWrapper>
-              ))}
+              data.map((training, index) => {
+                return (
+                  <>
+                    <div
+                      onClick={() => handleTrainingClick(index)}
+                      key={training.id}
+                      className="text-backgroundBlue focus:outline-cyan border-cyan my-4 flex basis-1/3 cursor-pointer
+                    justify-center rounded bg-gradient-to-r from-darkOcean to-lightCyan
+                    py-4 px-3 text-6xl text-white shadow-2xl
+                    outline-none hover:text-bg hover:outline-slate-400"
+                    >
+                      {training.label}
+                    </div>
+                    {expandedIndex === index && (
+                      <div className="flex justify-around">
+                        <Button
+                          onClick={() => deleteTraining(training.id)}
+                          variant="success"
+                          disabled={deleteLoading}
+                        >
+                          Usun
+                        </Button>
+                        <Button variant="success">Rozpocznij</Button>
+                      </div>
+                    )}
+                  </>
+                );
+              })}
           </div>
           <Button
             onClick={() => setIsAdding(!isAdding)}

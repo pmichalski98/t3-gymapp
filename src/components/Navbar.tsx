@@ -28,7 +28,10 @@ function Navbar() {
   ));
 
   return (
-    <nav className="sticky top-0 flex justify-center justify-around border-b-4 border-lightCyan px-1 pt-3 pb-1">
+    <nav
+      className="sticky top-0 mx-auto flex max-w-screen-xl justify-center justify-around border-b-4 border-lightCyan px-1
+     pt-3 pb-1"
+    >
       {renderedLinks}
       {
         <>

@@ -59,7 +59,16 @@ export const trainingsRouter = createTRPCRouter({
         include: { exercises: true },
       });
     }),
-  getChosen: privateProcedure
+  deleteByid: privateProcedure
+    .input(z.string().uuid())
+    .mutation(async ({ ctx, input }) => {
+      const deleted = await ctx.prisma.training.delete({
+        where: { id: input },
+      });
+      if (!deleted) throw new TRPCError({ code: "NOT_FOUND" });
+      return deleted;
+    }),
+  getById: privateProcedure
     .input(z.string().uuid())
     .query(async ({ ctx, input }) => {
       const training = await ctx.prisma.training.findUnique({
