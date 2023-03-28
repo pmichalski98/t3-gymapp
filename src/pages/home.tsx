@@ -1,31 +1,19 @@
 import { type NextPage } from "next";
 
-import { api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 import { ClipLoader } from "react-spinners";
 import Link from "next/link";
 import ContentLayout from "~/components/ContentLayout";
 import Button from "~/components/Button";
 import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
 import React, { type ChangeEvent, DOMElement, useState } from "react";
-import { type Exercise } from "@prisma/client";
+import { type Exercise, type Training } from "@prisma/client";
 import Input from "~/components/Input";
 import { GiCancel } from "react-icons/gi";
 
 const Home: NextPage = () => {
-  const utils = api.useContext();
   const { data, isLoading, error } = api.trainings.getAll.useQuery();
-  const { mutate: deleteTraining, isLoading: deleteLoading } =
-    api.trainings.deleteByid.useMutation({
-      onSuccess: async () => {
-        await utils.trainings.invalidate();
-        toast("Training deleted", { type: "success" });
-      },
-    });
   const [isAdding, setIsAdding] = useState(false);
-  const [expandedIndex, setExpandedIndex] = useState(NaN);
-  const handleTrainingClick = (index: number) =>
-    index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
-
   if (error) return <div>Something went wrong...</div>;
 
   //auto-cols-fr
@@ -36,37 +24,7 @@ const Home: NextPage = () => {
       ) : (
         <>
           <h1 className="text-3xl">Choose training:</h1>
-          <div className="">
-            {data &&
-              data.map((training, index) => {
-                return (
-                  <>
-                    <div
-                      onClick={() => handleTrainingClick(index)}
-                      key={training.id}
-                      className="text-backgroundBlue focus:outline-cyan border-cyan my-4 flex basis-1/3 cursor-pointer
-                    justify-center rounded bg-gradient-to-r from-darkOcean to-lightCyan
-                    py-4 px-3 text-6xl text-white shadow-2xl
-                    outline-none hover:text-bg hover:outline-slate-400"
-                    >
-                      {training.label}
-                    </div>
-                    {expandedIndex === index && (
-                      <div className="flex justify-around">
-                        <Button
-                          onClick={() => deleteTraining(training.id)}
-                          variant="success"
-                          disabled={deleteLoading}
-                        >
-                          Usun
-                        </Button>
-                        <Button variant="success">Rozpocznij</Button>
-                      </div>
-                    )}
-                  </>
-                );
-              })}
-          </div>
+          <div className="">{data && <TrainingList data={data} />}</div>
           <Button
             onClick={() => setIsAdding(!isAdding)}
             variant="secondary"
@@ -81,8 +39,61 @@ const Home: NextPage = () => {
     </ContentLayout>
   );
 };
-
 export default Home;
+export function TrainingList({
+  data,
+}: {
+  data: RouterOutputs["trainings"]["getAll"];
+}) {
+  const utils = api.useContext();
+  const { mutate: deleteTraining, isLoading: deleteLoading } =
+    api.trainings.deleteByid.useMutation({
+      onSuccess: async () => {
+        await utils.trainings.invalidate();
+        toast("Training deleted", { type: "success" });
+      },
+    });
+  const [expandedIndex, setExpandedIndex] = useState(NaN);
+  const handleTrainingClick = (index: number) =>
+    index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
+  const renderedTrainings = data.map((training, index) => {
+    return (
+      <div key={training.id}>
+        <div
+          onClick={() => handleTrainingClick(index)}
+          className="text-backgroundBlue focus:outline-cyan border-cyan my-4 flex basis-1/3 cursor-pointer
+                    justify-center rounded bg-gradient-to-r from-darkOcean to-lightCyan
+                    py-4 px-3 text-6xl text-white shadow-2xl
+                    outline-none hover:text-bg hover:outline-slate-400"
+        >
+          {training.label}
+        </div>
+        {expandedIndex === index && (
+          <div className="flex justify-around">
+            <Button
+              onClick={() => deleteTraining(training.id)}
+              variant="success"
+              disabled={deleteLoading}
+            >
+              Usuń
+            </Button>
+            <Button variant="success">
+              <Link
+                href={{
+                  pathname: "/home/[id]",
+                  query: { id: training.id },
+                }}
+              >
+                Rozpocznij
+              </Link>
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  });
+  return <>{renderedTrainings}</>;
+}
 export function AddTraining({
   closeWindow,
 }: {
@@ -184,6 +195,8 @@ export function AddTraining({
 
 import { GoTrashcan } from "react-icons/go";
 import { toast } from "react-toastify";
+import { type inferProcedureOutput } from "@trpc/server";
+import { type AppRouter } from "~/server/api/root";
 interface Props {
   exercises: Pick<Exercise, "label">[];
   onDelete?: (index: number) => void;
