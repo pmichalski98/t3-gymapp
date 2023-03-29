@@ -26,6 +26,7 @@ model Training {
 
 model TrainingUnit {
   id         String     @id @default(uuid())
+  label         String         @db.VarChar(255)
   exercises  Exercise[]
   createdAt  DateTime
   endedAt    DateTime

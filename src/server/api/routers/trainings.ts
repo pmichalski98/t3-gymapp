@@ -4,25 +4,26 @@ import { TRPCError } from "@trpc/server";
 
 const exerciseSchema = z.object({
   id: z.string().uuid(),
+  trainingId: z.string().uuid(),
   label: z.string(),
   sets: z.number(),
   reps: z.number(),
   weight: z.number(),
 });
 
+const trainingUnitSchema = z.object({
+  trainingId: z.string().uuid(),
+  label: z.string(),
+  createdAt: z.date(),
+  endedAt: z.date(),
+  exercises: z.array(exerciseSchema),
+});
+
 const trainingSchema = z.object({
   id: z.string().uuid(),
   label: z.string(),
   exercises: z.array(exerciseSchema),
-  trainingUnits: z
-    .array(
-      z.object({
-        id: z.string().uuid(),
-        date: z.date(),
-        exercises: z.array(exerciseSchema),
-      })
-    )
-    .optional(),
+  trainingUnits: z.array(trainingUnitSchema).optional(),
 });
 
 export const trainingsRouter = createTRPCRouter({
@@ -41,6 +42,42 @@ export const trainingsRouter = createTRPCRouter({
           userId: ctx.userId,
         },
       });
+    }),
+  finishTrainingUnit: privateProcedure
+    .input(trainingUnitSchema)
+    .mutation(async ({ ctx, input }) => {
+      const trainingUnit = await ctx.prisma.training.update({
+        where: { id: input.trainingId },
+        data: {
+          trainingUnits: {
+            create: {
+              createdAt: input.createdAt,
+              endedAt: input.endedAt,
+              label: input.label,
+              exercises: { createMany: { data: input.exercises } },
+            },
+          },
+        },
+      });
+      if (!trainingUnit) throw new TRPCError({ code: "BAD_REQUEST" });
+      return { affectedRecords: 1 };
+    }),
+  startTraining: privateProcedure
+    .input(z.string().uuid())
+    .query(async ({ ctx, input }) => {
+      const trainingUnit = await ctx.prisma.trainingUnit.findFirst({
+        where: { trainingId: input },
+        include: { exercises: true },
+      });
+      if (!trainingUnit) {
+        const training = await ctx.prisma.training.findUnique({
+          where: { id: input },
+          include: { exercises: true },
+        });
+        if (!training) throw new TRPCError({ code: "NOT_FOUND" });
+        return training;
+      }
+      return trainingUnit;
     }),
   editTraining: privateProcedure
     .input(trainingSchema)

@@ -5,7 +5,11 @@ import type { FormData } from "~/types/training";
 import Input from "~/components/Input";
 import Button from "~/components/Button";
 import TrainingTable from "~/components/TrainingTable";
-import { type Exercise, type Training } from "@prisma/client";
+import {
+  type Exercise,
+  type Training,
+  type TrainingUnit,
+} from "@prisma/client";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
@@ -21,11 +25,11 @@ function Id() {
     data: training,
     isLoading,
     error,
-  } = api.trainings.getById.useQuery(id);
+  } = api.trainings.startTraining.useQuery(id);
 
   const utils = api.useContext();
   const { mutate, isLoading: editTrainingLoading } =
-    api.trainings.editTraining.useMutation({
+    api.trainings.finishTrainingUnit.useMutation({
       onSuccess: async () => {
         toast.success("Training updated successfully");
         await utils.trainings.invalidate();
@@ -33,12 +37,16 @@ function Id() {
     });
 
   const [updatedTraining, setUpdatedTraining] = useState<
-    Training & { exercises: Exercise[] }
+    | (Training & { exercises: Exercise[] })
+    | (TrainingUnit & { exercises: Exercise[] })
   >();
+
+  const [expandedIndex, setExpandedIndex] = useState(false);
 
   if (error) return <div>Something went wrong ...</div>;
 
   if (training && updatedTraining === undefined) setUpdatedTraining(training);
+  console.log(training);
 
   function handleEditFormChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -76,7 +84,9 @@ function Id() {
 
   function submitTraining() {
     if (updatedTraining) {
+      // trzeba najprawdopodobniej dodac createdAt i endedAt
       mutate(updatedTraining);
+      setExpandedIndex(false);
     }
   }
 
@@ -94,7 +104,6 @@ function Id() {
         onChange={(event) => handleEditFormChange(event, name)}
       />
     ) : name === "weight" ? (
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `${label} kg`
     ) : (
       label
@@ -146,14 +155,12 @@ function Id() {
     },
   ];
   return (
-    <div className="mx-auto my-6 max-w-3xl px-2 text-center">
+    <div className="m-auto mt-20 max-w-3xl rounded bg-slate-100/5 py-10 px-2 text-center  ">
       {isLoading ? (
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
       ) : (
         <>
-          <Button variant={"primary"} rounded onClick={() => router.back()}>
-            Go Back
-          </Button>
+          <TrainingTimeTicker />
           <h1 className="my-6 p-4 text-center text-5xl capitalize">
             {training.label}
           </h1>
@@ -168,24 +175,37 @@ function Id() {
               />
             </>
           </form>
-          <div className="flex place-content-end ">
-            <Button
-              className="mt-10"
-              variant="primary"
-              rounded
-              onClick={submitTraining}
-              disabled={editTrainingLoading}
-            >
-              {editTrainingLoading ? <ClipLoader size={20} /> : "Save Training"}
-            </Button>
-          </div>
-
           <Button
+            className="mx-auto mt-10"
             variant="primary"
-            className="mx-auto mt-10 rounded px-9 py-6 text-3xl"
+            hidden={expandedIndex}
+            rounded
+            onClick={() => setExpandedIndex(!expandedIndex)}
+            disabled={editTrainingLoading}
           >
-            START TRAINING
+            {editTrainingLoading ? <ClipLoader size={20} /> : "Zakończ trening"}
           </Button>
+          {expandedIndex && (
+            <div className="flex flex-wrap">
+              <h2 className="w-full ">
+                Czy napewno chcesz zakonczyc trening ?
+              </h2>
+              <Button
+                onClick={() => submitTraining()}
+                variant="success"
+                className="mx-auto"
+              >
+                Tak
+              </Button>
+              <Button
+                onClick={() => setExpandedIndex(false)}
+                variant="primary"
+                className="mx-auto"
+              >
+                Nie
+              </Button>
+            </div>
+          )}
         </>
       )}
     </div>
@@ -193,3 +213,34 @@ function Id() {
 }
 
 export default Id;
+
+export const TrainingTimeTicker = () => {
+  const [startTime, setStartTime] = useState(new Date());
+
+  let endTime: Date;
+  const handleEndTraining = () => {
+    endTime = new Date();
+    const num = Math.abs(endTime.getTime() - startTime.getTime());
+    console.log(Math.floor(num / 1000));
+    const dd = new Date().setTime(num);
+    // to mi zwraca ile czasu upłyneło tylko w GMT +1 (czyli w Polsce)
+  };
+
+  return <div>{startTime.toLocaleTimeString()}</div>;
+  // const [time, setTime] = useState(0);
+  //
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => setTime(time + 1), 10);
+  //   return () => clearInterval(intervalId);
+  // }, [time]);
+  //
+  // const hours = Math.floor(time / 360000);
+  // const minutes = Math.floor((time % 360000) / 6000);
+  // const seconds = Math.floor((time % 6000) / 100);
+  //
+  // return (
+  //   <div>{`${hours.toString().padStart(2, "0")} : ${minutes
+  //     .toString()
+  //     .padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`}</div>
+  // );
+};

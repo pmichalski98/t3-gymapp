@@ -69,7 +69,7 @@ export function TrainingList({
           {training.label}
         </div>
         {expandedIndex === index && (
-          <div className="flex justify-around">
+          <div className="flex justify-around pb-4">
             <Button
               onClick={() => deleteTraining(training.id)}
               variant="success"

@@ -10,6 +10,7 @@ interface Props {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  hidden?: boolean;
 }
 
 function Button({
@@ -18,6 +19,7 @@ function Button({
   rounded,
   className,
   variant,
+  hidden,
   ...rest
 }: Props) {
   const classes = classNames(
@@ -33,6 +35,7 @@ function Button({
         variant === "success",
       "border-2": outlined,
       "rounded-full": rounded,
+      hidden: hidden,
     },
     className
   );
