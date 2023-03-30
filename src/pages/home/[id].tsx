@@ -26,7 +26,6 @@ function Id() {
     isLoading,
     error,
   } = api.trainings.startTraining.useQuery(id);
-
   const utils = api.useContext();
   const { mutate, isLoading: editTrainingLoading } =
     api.trainings.finishTrainingUnit.useMutation({
@@ -46,7 +45,6 @@ function Id() {
   if (error) return <div>Something went wrong ...</div>;
 
   if (training && updatedTraining === undefined) setUpdatedTraining(training);
-  console.log(training);
 
   function handleEditFormChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -69,6 +67,7 @@ function Id() {
   function handleSaveBtn(event: SyntheticEvent): void {
     event.preventDefault();
     if (updatedTraining) {
+      console.log(updatedTraining);
       const updatedExercises = updatedTraining.exercises.map((exercise) =>
         exercise.id === formData.id
           ? { ...exercise, ...formData }
@@ -82,10 +81,23 @@ function Id() {
     setEditRow(null);
   }
 
+  console.log(training);
+
   function submitTraining() {
     if (updatedTraining) {
-      // trzeba najprawdopodobniej dodac createdAt i endedAt
-      mutate(updatedTraining);
+      const unit: Omit<TrainingUnit, "id"> & {
+        exercises: Omit<Exercise, "id">[];
+      } = {
+        exercises: updatedTraining.exercises.map((exercise) => {
+          return { ...exercise, id: undefined };
+        }),
+        label: updatedTraining.label,
+        createdAt: new Date(),
+        endedAt: new Date(),
+        trainingId: updatedTraining.id,
+      };
+      console.log(unit);
+      mutate(unit);
       setExpandedIndex(false);
     }
   }
@@ -162,7 +174,7 @@ function Id() {
         <>
           <TrainingTimeTicker />
           <h1 className="my-6 p-4 text-center text-5xl capitalize">
-            {training.label}
+            {training?.label}
           </h1>
           <form
             className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr_1fr] gap-4 px-2 text-center text-sm"

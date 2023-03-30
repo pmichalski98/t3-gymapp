@@ -16,7 +16,7 @@ const trainingUnitSchema = z.object({
   label: z.string(),
   createdAt: z.date(),
   endedAt: z.date(),
-  exercises: z.array(exerciseSchema),
+  exercises: z.array(exerciseSchema.omit({ id: true })),
 });
 
 const trainingSchema = z.object({
@@ -46,21 +46,29 @@ export const trainingsRouter = createTRPCRouter({
   finishTrainingUnit: privateProcedure
     .input(trainingUnitSchema)
     .mutation(async ({ ctx, input }) => {
-      const trainingUnit = await ctx.prisma.training.update({
-        where: { id: input.trainingId },
+      const trainingUnit = await ctx.prisma.trainingUnit.create({
         data: {
-          trainingUnits: {
-            create: {
-              createdAt: input.createdAt,
-              endedAt: input.endedAt,
-              label: input.label,
-              exercises: { createMany: { data: input.exercises } },
-            },
+          createdAt: input.createdAt,
+          endedAt: input.endedAt,
+          label: input.label,
+          trainingId: input.trainingId,
+          exercises: {
+            createMany: { data: input.exercises },
           },
         },
       });
       if (!trainingUnit) throw new TRPCError({ code: "BAD_REQUEST" });
       return { affectedRecords: 1 };
+    }),
+  getAllTrainingUnits: privateProcedure
+    .input(z.string().uuid())
+    .query(async ({ ctx, input }) => {
+      const trainingUnits = await ctx.prisma.trainingUnit.findMany({
+        where: { trainingId: input },
+        include: { exercises: true, training: true },
+      });
+      if (!trainingUnits) throw new TRPCError({ code: "NOT_FOUND" });
+      return trainingUnits;
     }),
   startTraining: privateProcedure
     .input(z.string().uuid())
@@ -70,12 +78,10 @@ export const trainingsRouter = createTRPCRouter({
         include: { exercises: true },
       });
       if (!trainingUnit) {
-        const training = await ctx.prisma.training.findUnique({
+        return ctx.prisma.training.findUnique({
           where: { id: input },
           include: { exercises: true },
         });
-        if (!training) throw new TRPCError({ code: "NOT_FOUND" });
-        return training;
       }
       return trainingUnit;
     }),
