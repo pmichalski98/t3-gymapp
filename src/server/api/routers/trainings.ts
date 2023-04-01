@@ -60,16 +60,6 @@ export const trainingsRouter = createTRPCRouter({
       if (!trainingUnit) throw new TRPCError({ code: "BAD_REQUEST" });
       return { affectedRecords: 1 };
     }),
-  getAllTrainingUnits: privateProcedure
-    .input(z.string().uuid())
-    .query(async ({ ctx, input }) => {
-      const trainingUnits = await ctx.prisma.trainingUnit.findMany({
-        where: { trainingId: input },
-        include: { exercises: true, training: true },
-      });
-      if (!trainingUnits) throw new TRPCError({ code: "NOT_FOUND" });
-      return trainingUnits;
-    }),
   startTraining: privateProcedure
     .input(z.string().uuid())
     .query(async ({ ctx, input }) => {
