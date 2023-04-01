@@ -11,3 +11,9 @@ input::-webkit-inner-spin-button{
 * {
     font-weight: bold;
 }
+
+html,
+body,
+:root {
+    height: 100%;
+}

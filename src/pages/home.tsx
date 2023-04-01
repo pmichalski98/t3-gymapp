@@ -61,10 +61,11 @@ export function TrainingList({
       <div key={training.id}>
         <div
           onClick={() => handleTrainingClick(index)}
-          className="text-backgroundBlue focus:outline-cyan border-cyan my-4 flex basis-1/3 cursor-pointer
-                    justify-center rounded bg-gradient-to-r from-darkOcean to-lightCyan
-                    py-4 px-3 text-6xl text-white shadow-2xl
-                    outline-none hover:text-bg hover:outline-slate-400"
+          className="text-backgroundBlue
+          focus:outline-cyan border-cyan my-4 flex basis-1/3
+                    cursor-pointer justify-center rounded bg-gradient-to-r from-darkOcean
+                    to-lightCyan py-4 px-3 text-6xl text-white
+                    outline-none transition hover:text-bg hover:outline-slate-400"
         >
           {training.label}
         </div>

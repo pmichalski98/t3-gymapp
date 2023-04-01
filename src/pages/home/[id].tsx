@@ -1,4 +1,9 @@
-import React, { type ChangeEvent, type SyntheticEvent, useState } from "react";
+import React, {
+  type ChangeEvent,
+  type SyntheticEvent,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import type { FormData } from "~/types/training";
@@ -12,7 +17,6 @@ import {
 } from "@prisma/client";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
-
 function Id() {
   const [editRow, setEditRow] = useState<number | null>(null);
   const [formData, setFormData] = useState<Exercise>({} as Exercise);
@@ -30,7 +34,7 @@ function Id() {
   const { mutate, isLoading: editTrainingLoading } =
     api.trainings.finishTrainingUnit.useMutation({
       onSuccess: async () => {
-        toast.success("Training updated successfully");
+        toast.success("Training zakończony!");
         await utils.trainings.invalidate();
       },
     });
@@ -41,6 +45,7 @@ function Id() {
   >();
 
   const [expandedIndex, setExpandedIndex] = useState(false);
+  const startTime = new Date();
 
   if (error) return <div>Something went wrong ...</div>;
 
@@ -67,7 +72,6 @@ function Id() {
   function handleSaveBtn(event: SyntheticEvent): void {
     event.preventDefault();
     if (updatedTraining) {
-      console.log(updatedTraining);
       const updatedExercises = updatedTraining.exercises.map((exercise) =>
         exercise.id === formData.id
           ? { ...exercise, ...formData }
@@ -81,8 +85,6 @@ function Id() {
     setEditRow(null);
   }
 
-  console.log(training);
-
   function submitTraining() {
     if (updatedTraining) {
       const unit: Omit<TrainingUnit, "id"> & {
@@ -92,7 +94,7 @@ function Id() {
           return { ...exercise, id: undefined };
         }),
         label: updatedTraining.label,
-        createdAt: new Date(),
+        createdAt: startTime,
         endedAt: new Date(),
         trainingId: updatedTraining.id,
       };
@@ -172,7 +174,7 @@ function Id() {
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
       ) : (
         <>
-          <TrainingTimeTicker />
+          <TrainingTimeTicker startTime={startTime.getTime()} />
           <h1 className="my-6 p-4 text-center text-5xl capitalize">
             {training?.label}
           </h1>
@@ -226,33 +228,27 @@ function Id() {
 
 export default Id;
 
-export const TrainingTimeTicker = () => {
-  const [startTime, setStartTime] = useState(new Date());
+interface TickerProps {
+  startTime: number;
+}
+export const TrainingTimeTicker = ({ startTime }: TickerProps) => {
+  const [time, setTime] = useState(startTime);
 
-  let endTime: Date;
-  const handleEndTraining = () => {
-    endTime = new Date();
-    const num = Math.abs(endTime.getTime() - startTime.getTime());
-    console.log(Math.floor(num / 1000));
-    const dd = new Date().setTime(num);
-    // to mi zwraca ile czasu upłyneło tylko w GMT +1 (czyli w Polsce)
-  };
+  useEffect(() => {
+    const timeInterval = setInterval(() => {
+      setTime(new Date().getTime() - startTime);
+    }, 1000);
+    return () => clearInterval(timeInterval);
+  }, []);
+  const seconds = new Date(time).getSeconds();
+  const minutes = new Date(time).getMinutes();
+  const hours = new Date(time).getHours() - 1;
 
-  return <div>{startTime.toLocaleTimeString()}</div>;
-  // const [time, setTime] = useState(0);
-  //
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => setTime(time + 1), 10);
-  //   return () => clearInterval(intervalId);
-  // }, [time]);
-  //
-  // const hours = Math.floor(time / 360000);
-  // const minutes = Math.floor((time % 360000) / 6000);
-  // const seconds = Math.floor((time % 6000) / 100);
-  //
-  // return (
-  //   <div>{`${hours.toString().padStart(2, "0")} : ${minutes
-  //     .toString()
-  //     .padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`}</div>
-  // );
+  return (
+    <div className="text-xl">
+      {`${hours.toString().padStart(2, "0")} : ${minutes
+        .toString()
+        .padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`}
+    </div>
+  );
 };

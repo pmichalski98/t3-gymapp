@@ -23,7 +23,7 @@ function Button({
   ...rest
 }: Props) {
   const classes = classNames(
-    "flex justify-center items-center text-white",
+    "flex justify-center transition items-center text-white",
     "shadow-2xl text-backgroundBlue ",
     "focus:outline-cyan outline-none px-3 py-1.5 rounded",
     {

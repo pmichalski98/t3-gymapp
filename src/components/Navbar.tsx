@@ -14,7 +14,7 @@ function Navbar() {
   ];
 
   const notActive =
-    "text-xl hover:text-lightCyan focus:outline-cyan outline-none rounded p-1";
+    "transition text-xl hover:text-lightCyan focus:outline-cyan outline-none rounded p-1";
   const active = `font-bold border-l-4 border-lightCyan pl-2 text-lightCyan ${notActive} `;
 
   const renderedLinks = links.map((link) => (
