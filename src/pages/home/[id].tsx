@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 function Id() {
   const [editRow, setEditRow] = useState<number | null>(null);
   const [formData, setFormData] = useState<Exercise>({} as Exercise);
+  const [startTime, setStartTime] = useState(new Date());
   const router = useRouter();
   const { id } = router.query;
 
@@ -45,12 +46,10 @@ function Id() {
   >();
 
   const [expandedIndex, setExpandedIndex] = useState(false);
-  const startTime = new Date();
 
   if (error) return <div>Something went wrong ...</div>;
 
   if (training && updatedTraining === undefined) setUpdatedTraining(training);
-
   function handleEditFormChange(
     event: ChangeEvent<HTMLInputElement>,
     fieldName: keyof FormData
@@ -91,7 +90,7 @@ function Id() {
         exercises: Omit<Exercise, "id">[];
       } = {
         exercises: updatedTraining.exercises.map((exercise) => {
-          return { ...exercise, id: undefined };
+          return { ...exercise, id: undefined, trainingId: updatedTraining.id };
         }),
         label: updatedTraining.label,
         createdAt: startTime,
@@ -99,6 +98,7 @@ function Id() {
         trainingId: updatedTraining.id,
       };
       console.log(unit);
+      console.log(updatedTraining);
       mutate(unit);
       setExpandedIndex(false);
     }

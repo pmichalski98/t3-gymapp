@@ -1,4 +1,3 @@
-
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
@@ -6,7 +5,7 @@ datasource db {
 }
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 model User {
@@ -26,21 +25,21 @@ model Training {
 
 model TrainingUnit {
   id         String     @id @default(uuid())
-  label         String         @db.VarChar(255)
+  label      String     @db.VarChar(255)
   exercises  Exercise[]
   createdAt  DateTime
   endedAt    DateTime
-  training   Training   @relation(fields: [trainingId], references: [id], onDelete: Cascade)
   trainingId String
+  Training   Training?  @relation(fields: [trainingId], references: [id], onDelete: Cascade)
 }
 
 model Exercise {
   id             String        @id @default(uuid())
-  label           String       @db.VarChar(255)
-  sets           Int          @default(3)
-  reps           Int         @default(3)
-  weight         Int         @default(12)
-  training       Training      @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  label          String        @db.VarChar(255)
+  sets           Int           @default(3)
+  reps           Int           @default(3)
+  weight         Int           @default(12)
+  training       Training?      @relation(fields: [trainingId], references: [id], onDelete: Cascade)
   trainingId     String
   trainingUnit   TrainingUnit? @relation(fields: [trainingUnitId], references: [id], onDelete: Cascade)
   trainingUnitId String?
