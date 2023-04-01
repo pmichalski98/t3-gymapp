@@ -1,10 +1,13 @@
 import Link from "next/link";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
 import { useRouter } from "next/router";
+import Image from "next/image";
 function Navbar() {
   const router = useRouter();
   const currentRoute = router.pathname;
+  const { user } = useUser();
+  if (!user) throw new Error("No user");
 
   const links = [
     { label: "Stats", path: "/stats" },
@@ -29,17 +32,25 @@ function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 mx-auto flex max-w-screen-xl justify-center justify-around border-b-4 border-lightCyan px-1
+      className="sticky top-0 mx-auto flex max-w-screen-xl items-center justify-center justify-around border-b-4 border-lightCyan px-1
      pt-3 pb-1"
     >
       {renderedLinks}
-      {
-        <>
-          <ButtonStyleWrapper className="m-0 flex-nowrap px-[5px] py-1">
-            <SignOutButton />
-          </ButtonStyleWrapper>
-        </>
-      }
+      <div className="flex gap-3">
+        <ButtonStyleWrapper className="m-0 h-3/4 flex-nowrap self-center px-[5px] py-1">
+          <SignOutButton />
+        </ButtonStyleWrapper>
+        <div className="">
+          <span>{user.firstName}</span>
+          <Image
+            className="mx-auto rounded-full"
+            src={user.profileImageUrl}
+            alt="Profile Image"
+            width={50}
+            height={50}
+          />
+        </div>
+      </div>
     </nav>
   );
 }
