@@ -204,7 +204,7 @@ function Id() {
                 Czy napewno chcesz zakonczyc trening ?
               </h2>
               <Button
-                onClick={submitTraining}
+                onClick={() => void submitTraining()}
                 variant="success"
                 className="mx-auto"
               >
