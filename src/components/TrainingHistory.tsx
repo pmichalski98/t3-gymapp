@@ -48,7 +48,7 @@ const TrainingHistory: React.FC = () => {
   ];
   return (
     <div className="mt-10 flex flex-col justify-center gap-4 py-4">
-      <h1 className="mx-auto w-1/2 border-b-4 border-lightCyan py-1 text-3xl">
+      <h1 className="mx-auto w-full border-b-4 border-lightCyan py-1 text-3xl lg:w-3/4">
         Last done trainings
       </h1>
       {data &&

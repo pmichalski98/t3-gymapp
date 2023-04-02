@@ -39,7 +39,6 @@ function Id() {
         await utils.trainings.invalidate();
       },
     });
-  console.log(training);
 
   const [updatedTraining, setUpdatedTraining] = useState<
     | (Training & { exercises: Exercise[] })
@@ -205,7 +204,7 @@ function Id() {
                 Czy napewno chcesz zakonczyc trening ?
               </h2>
               <Button
-                onClick={() => submitTraining()}
+                onClick={submitTraining}
                 variant="success"
                 className="mx-auto"
               >
@@ -239,7 +238,7 @@ export const TrainingTimeTicker: FC<TickerProps> = ({ startTime }) => {
       setTime(new Date().getTime() - startTime);
     }, 1000);
     return () => clearInterval(timeInterval);
-  }, []);
+  }, [startTime]);
   const seconds = new Date(time).getSeconds();
   const minutes = new Date(time).getMinutes();
   const hours = new Date(time).getHours() - 1;
