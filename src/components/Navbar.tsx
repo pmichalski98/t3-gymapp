@@ -40,8 +40,7 @@ function Navbar() {
         <ButtonStyleWrapper className="m-0 h-3/4 flex-nowrap self-center px-[5px] py-1">
           <SignOutButton />
         </ButtonStyleWrapper>
-        <div className="">
-          <span>{user.firstName}</span>
+        <div>
           <Image
             className="mx-auto rounded-full"
             src={user.profileImageUrl}

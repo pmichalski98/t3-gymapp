@@ -65,8 +65,9 @@ export const trainingsRouter = createTRPCRouter({
   startTraining: privateProcedure
     .input(z.string().uuid())
     .query(async ({ ctx, input }) => {
-      const trainingUnit = await ctx.prisma.trainingUnit.findFirst({
+      const trainingUnit = await ctx.prisma.trainingUnit.findMany({
         where: { trainingId: input },
+        orderBy: { createdAt: "desc" },
         include: { exercises: true },
       });
       if (!trainingUnit) {
@@ -75,7 +76,7 @@ export const trainingsRouter = createTRPCRouter({
           include: { exercises: true },
         });
       }
-      return trainingUnit;
+      return trainingUnit[0];
     }),
   getTrainingUnits: privateProcedure.query(async ({ ctx }) => {
     const trainingUnits = await ctx.prisma.trainingUnit.findMany({

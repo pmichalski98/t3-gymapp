@@ -29,7 +29,7 @@ const Home: NextPage = () => {
           <div className="">{data && <TrainingList data={data} />}</div>
           <Button
             onClick={() => setIsAdding(!isAdding)}
-            variant="secondary"
+            variant="accent"
             className="mx-auto"
           >
             Add Training +

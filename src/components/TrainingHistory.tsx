@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 import { GoChevronDown, GoChevronLeft } from "react-icons/go";
-import { ShowExercises } from "~/components/trainings/ShowExercises";
 import TrainingTable from "~/components/TrainingTable";
 import { type Exercise } from "@prisma/client";
-import Button from "~/components/Button";
 
 export const formatDate = (date: Date) => {
-  const day = Intl.DateTimeFormat("pl-PL", {
+  const day = Intl.DateTimeFormat("en-EN", {
     weekday: "long",
   }).format(date);
   return (
     <p className="capitalize">
       {day}
+      {", "}
       {date.toLocaleDateString()}
     </p>
   );
@@ -22,10 +21,9 @@ const TrainingHistory: React.FC = () => {
   const { data, isLoading, error } = api.trainings.getTrainingUnits.useQuery();
   if (error) return <div>Something went wrong...</div>;
   if (isLoading) return <div>Loading...</div>;
-  function handleExpandClick(index: number) {
+  const handleExpandClick = (index: number) => {
     index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
-  }
-
+  };
   const config = [
     {
       label: "",
@@ -33,25 +31,25 @@ const TrainingHistory: React.FC = () => {
     },
     {
       label: "Exercise",
-      render: (exercise: Exercise, index: number) => exercise.label,
+      render: (exercise: Exercise) => exercise.label,
     },
     {
       label: "Sets",
-      render: (exercise: Exercise, index: number) => exercise.sets,
+      render: (exercise: Exercise) => exercise.sets,
     },
     {
       label: "Reps",
-      render: (exercise: Exercise, index: number) => exercise.reps,
+      render: (exercise: Exercise) => exercise.reps,
     },
     {
       label: "Weight",
-      render: (exercise: Exercise, index: number) => exercise.weight,
+      render: (exercise: Exercise) => exercise.weight,
     },
   ];
   return (
     <div className="mt-10 flex flex-col justify-center gap-4 py-4">
       <h1 className="mx-auto w-1/2 border-b-4 border-lightCyan py-1 text-3xl">
-        Ostatnie treningi:
+        Last done trainings
       </h1>
       {data &&
         data.map((trainingUnit, index) => {

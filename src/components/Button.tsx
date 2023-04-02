@@ -3,7 +3,7 @@ import React, { type ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
-  variant: "primary" | "secondary" | "success";
+  variant: "primary" | "secondary" | "success" | "accent";
   outlined?: boolean;
   rounded?: boolean;
   className?: string;
@@ -25,7 +25,7 @@ function Button({
   const classes = classNames(
     "flex justify-center transition items-center text-white",
     "shadow-2xl text-backgroundBlue ",
-    "focus:outline-cyan outline-none px-3 py-1.5 rounded",
+    "focus:outline-cyan outline-none px-3 py-1.5 rounded tranisition",
     {
       "border-cyan bg-gradient-to-r from-darkOcean to-lightCyan hover:text-bg hover:outline-slate-400":
         variant === "primary",
@@ -33,6 +33,8 @@ function Button({
         variant === "secondary",
       "border-cyanLight bg-darkCyan text-black hover:outline-white hover:text-bg":
         variant === "success",
+      "bg-lightOcean border-2 border-darkCyan border-solid hover:text-bg":
+        variant === "accent",
       "border-2": outlined,
       "rounded-full": rounded,
       hidden: hidden,

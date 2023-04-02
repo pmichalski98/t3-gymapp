@@ -26,7 +26,6 @@ function Id() {
   const { id } = router.query;
 
   if (typeof id !== "string") throw new Error("no id");
-
   const {
     data: training,
     isLoading,
@@ -40,6 +39,7 @@ function Id() {
         await utils.trainings.invalidate();
       },
     });
+  console.log(training);
 
   const [updatedTraining, setUpdatedTraining] = useState<
     | (Training & { exercises: Exercise[] })

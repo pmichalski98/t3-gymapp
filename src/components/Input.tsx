@@ -1,6 +1,6 @@
 import React, { type ChangeEvent } from "react";
 import classNames from "classnames";
-import { type FormData } from "~/types/training";
+import { type Exercise } from "@prisma/client";
 
 interface Props {
   className?: string;
@@ -11,7 +11,7 @@ interface Props {
   required?: boolean;
   onChange: (
     event: ChangeEvent<HTMLInputElement>,
-    fieldName?: keyof FormData
+    fieldName?: keyof Partial<Exercise>
   ) => void;
 }
 
