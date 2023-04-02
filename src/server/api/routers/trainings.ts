@@ -35,6 +35,7 @@ export const trainingsRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log(ctx.userId);
       return await ctx.prisma.training.create({
         data: {
           label: input.label,
@@ -52,6 +53,7 @@ export const trainingsRouter = createTRPCRouter({
           endedAt: input.endedAt,
           label: input.label,
           trainingId: input.trainingId,
+          userId: ctx.userId,
           exercises: {
             createMany: { data: input.exercises },
           },
@@ -75,6 +77,16 @@ export const trainingsRouter = createTRPCRouter({
       }
       return trainingUnit;
     }),
+  getTrainingUnits: privateProcedure.query(async ({ ctx }) => {
+    const trainingUnits = await ctx.prisma.trainingUnit.findMany({
+      where: { userId: ctx.userId },
+      include: { exercises: true },
+      take: 5,
+      orderBy: { createdAt: "desc" },
+    });
+    if (!trainingUnits) throw new TRPCError({ code: "NOT_FOUND" });
+    return trainingUnits;
+  }),
   editTraining: privateProcedure
     .input(trainingSchema)
     .mutation(({ ctx, input }) => {

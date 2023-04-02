@@ -1,12 +1,12 @@
 import React, {
   type ChangeEvent,
+  type FC,
   type SyntheticEvent,
   useEffect,
   useState,
 } from "react";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import type { FormData } from "~/types/training";
 import Input from "~/components/Input";
 import Button from "~/components/Button";
 import TrainingTable from "~/components/TrainingTable";
@@ -17,6 +17,7 @@ import {
 } from "@prisma/client";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
+
 function Id() {
   const [editRow, setEditRow] = useState<number | null>(null);
   const [formData, setFormData] = useState<Exercise>({} as Exercise);
@@ -52,7 +53,7 @@ function Id() {
   if (training && updatedTraining === undefined) setUpdatedTraining(training);
   function handleEditFormChange(
     event: ChangeEvent<HTMLInputElement>,
-    fieldName: keyof FormData
+    fieldName: keyof Partial<Exercise>
   ) {
     event.preventDefault();
 
@@ -84,9 +85,9 @@ function Id() {
     setEditRow(null);
   }
 
-  function submitTraining() {
+  async function submitTraining() {
     if (updatedTraining) {
-      const unit: Omit<TrainingUnit, "id"> & {
+      const unit: Omit<TrainingUnit, "id" | "userId"> & {
         exercises: Omit<Exercise, "id">[];
       } = {
         exercises: updatedTraining.exercises.map((exercise) => {
@@ -97,16 +98,15 @@ function Id() {
         endedAt: new Date(),
         trainingId: updatedTraining.id,
       };
-      console.log(unit);
-      console.log(updatedTraining);
       mutate(unit);
       setExpandedIndex(false);
+      await router.push("/");
     }
   }
 
   function showInputOrLabel(
     index: number,
-    name: keyof FormData,
+    name: keyof Partial<Exercise>,
     label: string | number,
     value: string | number
   ) {
@@ -231,7 +231,7 @@ export default Id;
 interface TickerProps {
   startTime: number;
 }
-export const TrainingTimeTicker = ({ startTime }: TickerProps) => {
+export const TrainingTimeTicker: FC<TickerProps> = ({ startTime }) => {
   const [time, setTime] = useState(startTime);
 
   useEffect(() => {

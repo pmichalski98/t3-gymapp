@@ -5,18 +5,20 @@ import { ClipLoader } from "react-spinners";
 import Link from "next/link";
 import ContentLayout from "~/components/ContentLayout";
 import Button from "~/components/Button";
-import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
-import React, { type ChangeEvent, DOMElement, useState } from "react";
-import { type Exercise, type Training } from "@prisma/client";
+import React, { type ChangeEvent, useState } from "react";
+import { type Exercise } from "@prisma/client";
 import Input from "~/components/Input";
 import { GiCancel } from "react-icons/gi";
+import { ShowExercises } from "~/components/trainings/ShowExercises";
+import { toast } from "react-toastify";
+import TrainingHistory from "~/components/TrainingHistory";
 
 const Home: NextPage = () => {
+  api.users.login.useQuery();
   const { data, isLoading, error } = api.trainings.getAll.useQuery();
   const [isAdding, setIsAdding] = useState(false);
   if (error) return <div>Something went wrong...</div>;
 
-  //auto-cols-fr
   return (
     <ContentLayout>
       {isLoading ? (
@@ -33,7 +35,7 @@ const Home: NextPage = () => {
             Add Training +
           </Button>
           {isAdding && <AddTraining closeWindow={setIsAdding} />}
-          <h3 className="pt-20">Some training history there : </h3>
+          <TrainingHistory />
         </>
       )}
     </ContentLayout>
@@ -61,8 +63,8 @@ export function TrainingList({
       <div key={training.id}>
         <div
           onClick={() => handleTrainingClick(index)}
-          className="text-backgroundBlue
-          focus:outline-cyan border-cyan my-4 flex basis-1/3
+          className="text-backgroundBlue focus:outline-cyan
+          border-cyan my-4 flex basis-1/3
                     cursor-pointer justify-center rounded bg-gradient-to-r from-darkOcean
                     to-lightCyan py-4 px-3 text-6xl text-white
                     outline-none transition hover:text-bg hover:outline-slate-400"
@@ -191,31 +193,5 @@ export function AddTraining({
         </form>
       )}
     </div>
-  );
-}
-
-import { GoTrashcan } from "react-icons/go";
-import { toast } from "react-toastify";
-import { type inferProcedureOutput } from "@trpc/server";
-import { type AppRouter } from "~/server/api/root";
-interface Props {
-  exercises: Pick<Exercise, "label">[];
-  onDelete?: (index: number) => void;
-}
-export function ShowExercises({ exercises, onDelete }: Props) {
-  return (
-    <>
-      {exercises.map((exercise, index) => (
-        <p key={index} className="flex items-center gap-2">
-          {index + 1} {exercise.label}
-          {onDelete && (
-            <GoTrashcan
-              className="cursor-pointer"
-              onClick={() => onDelete(index)}
-            />
-          )}
-        </p>
-      ))}
-    </>
   );
 }
