@@ -47,9 +47,9 @@ const TrainingHistory: React.FC = () => {
     },
   ];
   return (
-    <div className="mt-10 flex flex-col justify-center gap-4 py-4">
+    <div className="flex flex-col justify-center gap-4 py-4">
       <h1 className="mx-auto w-full border-b-4 border-lightCyan py-1 text-3xl lg:w-3/4">
-        Last done trainings
+        Recent workouts
       </h1>
       {data &&
         data.map((trainingUnit, index) => {
@@ -58,17 +58,21 @@ const TrainingHistory: React.FC = () => {
             <div
               onClick={() => handleExpandClick(index)}
               key={trainingUnit.id}
-              className="mx-auto flex cursor-pointer flex-wrap gap-4 rounded border p-2"
+              className="mx-auto cursor-pointer gap-4 rounded border p-2"
             >
-              <div className="mx-auto flex gap-2">
-                {`${trainingUnit.label} `}
+              <div
+                className={`mx-auto flex gap-2 border-darkOcean py-2 px-10 md:text-xl ${
+                  isExpanded ? "border-b-4" : ""
+                }`}
+              >
+                <p className="text-lightCyan ">{`${trainingUnit.label} `}</p>
                 {formatDate(trainingUnit.createdAt)}
-                <span className="content-end">
+                <span className="self-center text-xl">
                   {isExpanded ? <GoChevronDown /> : <GoChevronLeft />}
                 </span>
               </div>
               {isExpanded && (
-                <div className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr] gap-4 px-2 text-center text-sm">
+                <div className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr] gap-4 px-2 py-6 text-center text-sm md:text-lg">
                   <TrainingTable
                     data={trainingUnit.exercises}
                     config={config}

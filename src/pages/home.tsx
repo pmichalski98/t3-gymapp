@@ -25,12 +25,12 @@ const Home: NextPage = () => {
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
       ) : (
         <>
-          <h1 className="text-3xl">Choose training:</h1>
-          <div className="">{data && <TrainingList data={data} />}</div>
+          <h1 className="mb-4 text-3xl">Choose training:</h1>
+          {data && <TrainingList data={data} />}
           <Button
             onClick={() => setIsAdding(!isAdding)}
             variant="accent"
-            className="mx-auto"
+            className="mx-auto my-10 text-2xl"
           >
             Add Training +
           </Button>
@@ -64,10 +64,10 @@ export function TrainingList({
         <div
           onClick={() => handleTrainingClick(index)}
           className="text-backgroundBlue focus:outline-cyan
-          border-cyan my-4 flex basis-1/3
-                    cursor-pointer justify-center rounded bg-gradient-to-r from-darkOcean
-                    to-lightCyan py-4 px-3 text-6xl text-white
-                    outline-none transition hover:text-bg hover:outline-slate-400"
+          border-cyan my-4 flex basis-1/3 cursor-pointer
+                    justify-center rounded bg-gradient-to-r from-darkOcean to-lightCyan
+                    py-4 px-3 text-6xl text-white outline-none
+                    transition hover:text-bg hover:outline-slate-400 md:py-9 md:px-6 md:text-7xl"
         >
           {training.label}
         </div>
@@ -95,7 +95,11 @@ export function TrainingList({
       </div>
     );
   });
-  return <>{renderedTrainings}</>;
+  return (
+    <div className="flex-wrap justify-around gap-6 md:flex">
+      {renderedTrainings}
+    </div>
+  );
 }
 export function AddTraining({
   closeWindow,
