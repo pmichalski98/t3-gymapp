@@ -12,6 +12,7 @@ import { GiCancel } from "react-icons/gi";
 import { ShowExercises } from "~/components/trainings/ShowExercises";
 import { toast } from "react-toastify";
 import TrainingHistory from "~/components/TrainingHistory";
+import ExpandablePanel from "~/components/trainings/ExpandablePanel";
 
 const Home: NextPage = () => {
   api.users.login.useQuery();
@@ -26,7 +27,7 @@ const Home: NextPage = () => {
       ) : (
         <>
           <h1 className="mb-4 text-3xl">Choose training:</h1>
-          {data && <TrainingList data={data} />}
+          {data && <TrainingList data={data} remove={true} start={true} />}
           <Button
             onClick={() => setIsAdding(!isAdding)}
             variant="accent"
@@ -42,19 +43,15 @@ const Home: NextPage = () => {
   );
 };
 export default Home;
-export function TrainingList({
-  data,
-}: {
+
+interface TrainingListProps {
   data: RouterOutputs["trainings"]["getAll"];
-}) {
-  const utils = api.useContext();
-  const { mutate: deleteTraining, isLoading: deleteLoading } =
-    api.trainings.deleteByid.useMutation({
-      onSuccess: async () => {
-        await utils.trainings.invalidate();
-        toast("Training deleted", { type: "success" });
-      },
-    });
+  remove?: boolean;
+  edit?: boolean;
+  start?: boolean;
+  editPanel?: (value: boolean) => void;
+}
+export function TrainingList({ data, remove, start, edit }: TrainingListProps) {
   const [expandedIndex, setExpandedIndex] = useState(NaN);
   const handleTrainingClick = (index: number) =>
     index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
@@ -72,25 +69,12 @@ export function TrainingList({
           {training.label}
         </div>
         {expandedIndex === index && (
-          <div className="flex justify-around pb-4">
-            <Button
-              onClick={() => deleteTraining(training.id)}
-              variant="success"
-              disabled={deleteLoading}
-            >
-              Usuń
-            </Button>
-            <Button variant="success">
-              <Link
-                href={{
-                  pathname: "/home/[id]",
-                  query: { id: training.id },
-                }}
-              >
-                Rozpocznij
-              </Link>
-            </Button>
-          </div>
+          <ExpandablePanel
+            training={training}
+            remove={remove}
+            start={start}
+            edit={edit}
+          />
         )}
       </div>
     );
@@ -147,11 +131,9 @@ export function AddTraining({
   return (
     <div className="mx-auto mt-6 max-w-4xl rounded border-4 border-darkCyan p-8 text-center">
       <GiCancel
-        className="relative bottom-4 h-6 w-6"
+        className="relative bottom-4 h-6 w-6 cursor-pointer"
         onClick={() => closeWindow(false)}
-      >
-        Cancel
-      </GiCancel>
+      />
       <div className="pb-8">
         <Input
           className="my-2 mx-auto block max-w-sm text-xl"

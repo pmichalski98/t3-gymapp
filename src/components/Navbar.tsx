@@ -32,8 +32,8 @@ function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 mx-auto flex max-w-6xl items-center justify-center justify-around border-b-4 border-lightCyan
-     px-1 pt-3 pb-1"
+      className="content fixed top-0 mx-auto flex w-full items-center justify-center justify-around overflow-hidden border-b-4 border-lightCyan bg-primary px-1
+     pb-1 "
     >
       {renderedLinks}
       <div className="flex gap-3">

@@ -168,59 +168,65 @@ function Id() {
     },
   ];
   return (
-    <div className="m-auto mt-20 max-w-3xl rounded bg-slate-100/5 py-10 px-2 text-center  ">
-      {isLoading ? (
-        <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
-      ) : (
-        <>
-          <TrainingTimeTicker startTime={startTime.getTime()} />
-          <h1 className="my-6 p-4 text-center text-5xl capitalize">
-            {training?.label}
-          </h1>
-          <form
-            className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr_1fr] gap-4 px-2 text-center text-sm"
-            onSubmit={handleSaveBtn}
-          >
-            <>
-              <TrainingTable
-                config={config}
-                data={updatedTraining && updatedTraining.exercises}
-              />
-            </>
-          </form>
-          <Button
-            className="mx-auto mt-10"
-            variant="primary"
-            hidden={expandedIndex}
-            rounded
-            onClick={() => setExpandedIndex(!expandedIndex)}
-            disabled={editTrainingLoading}
-          >
-            {editTrainingLoading ? <ClipLoader size={20} /> : "Zakończ trening"}
-          </Button>
-          {expandedIndex && (
-            <div className="flex flex-wrap">
-              <h2 className="w-full ">
-                Czy napewno chcesz zakonczyc trening ?
-              </h2>
-              <Button
-                onClick={() => void submitTraining()}
-                variant="success"
-                className="mx-auto"
-              >
-                Tak
-              </Button>
-              <Button
-                onClick={() => setExpandedIndex(false)}
-                variant="primary"
-                className="mx-auto"
-              >
-                Nie
-              </Button>
-            </div>
-          )}
-        </>
-      )}
+    <div className="mx-auto flex h-screen items-center justify-center rounded pb-20 text-center">
+      <div className="">
+        {isLoading ? (
+          <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
+        ) : (
+          <>
+            <TrainingTimeTicker startTime={startTime.getTime()} />
+            <h1 className="my-6 p-4 text-center text-5xl capitalize md:text-6xl">
+              {training?.label}
+            </h1>
+            <form
+              className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr_1fr] gap-4 px-2 text-center md:text-xl"
+              onSubmit={handleSaveBtn}
+            >
+              <>
+                <TrainingTable
+                  config={config}
+                  data={updatedTraining && updatedTraining.exercises}
+                />
+              </>
+            </form>
+            <Button
+              className="mx-auto mt-10 text-xl"
+              variant="primary"
+              hidden={expandedIndex}
+              rounded
+              onClick={() => setExpandedIndex(!expandedIndex)}
+              disabled={editTrainingLoading}
+            >
+              {editTrainingLoading ? (
+                <ClipLoader size={20} />
+              ) : (
+                "Zakończ trening"
+              )}
+            </Button>
+            {expandedIndex && (
+              <div className="flex flex-wrap">
+                <h2 className="w-full ">
+                  Czy napewno chcesz zakonczyc trening ?
+                </h2>
+                <Button
+                  onClick={() => void submitTraining()}
+                  variant="success"
+                  className="mx-auto"
+                >
+                  Tak
+                </Button>
+                <Button
+                  onClick={() => setExpandedIndex(false)}
+                  variant="primary"
+                  className="mx-auto"
+                >
+                  Nie
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -244,7 +250,7 @@ export const TrainingTimeTicker: FC<TickerProps> = ({ startTime }) => {
   const hours = new Date(time).getHours() - 1;
 
   return (
-    <div className="text-xl">
+    <div className="text-2xl md:text-3xl">
       {`${hours.toString().padStart(2, "0")} : ${minutes
         .toString()
         .padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`}
