@@ -15,4 +15,12 @@ export const usersRouter = createTRPCRouter({
     }
     return user;
   }),
+  getUserMeasurements: privateProcedure.query(async ({ ctx }) => {
+    const userMeasurements = await ctx.prisma.user.findUnique({
+      where: { id: ctx.userId },
+      select: { body: true, kcal: true, weight: true },
+    });
+    if (!userMeasurements) return null;
+    return userMeasurements;
+  }),
 });

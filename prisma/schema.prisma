@@ -12,12 +12,12 @@ model User {
   id        String     @id @default(cuid())
   createdAt DateTime   @default(now())
   trainings Training[]
-  weight WeightMeasurement[]
-  bodyMeasurments BodyMeasurement[]
-  kcalMeasurments KcalMeasurement[]
+  weight    Weight[]
+  body      Body[]
+  kcal      Kcal[]
 }
 
-model KcalMeasurement {
+model Kcal {
   id        String   @id @default(uuid())
   kcal      Int
   createdAt DateTime @default(now())
@@ -25,22 +25,22 @@ model KcalMeasurement {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model BodyMeasurement {
+model Body {
   id        String   @id @default(uuid())
-  neck    Int?
-  chest   Int?
-  waist   Int?
-  hips    Int?
-  thigh   Int?
-  biceps Int?
+  neck      Float?
+  chest     Float?
+  waist     Float?
+  hips      Float?
+  thigh     Float?
+  biceps    Float?
   createdAt DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model WeightMeasurement {
+model Weight {
   id        String   @id @default(uuid())
-  weight    Int
+  weight    Float
   createdAt DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -72,7 +72,7 @@ model Exercise {
   sets           Int           @default(3)
   reps           Int           @default(3)
   weight         Int           @default(12)
-  training       Training?      @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  training       Training?     @relation(fields: [trainingId], references: [id], onDelete: Cascade)
   trainingId     String
   trainingUnit   TrainingUnit? @relation(fields: [trainingUnitId], references: [id], onDelete: Cascade)
   trainingUnitId String?
