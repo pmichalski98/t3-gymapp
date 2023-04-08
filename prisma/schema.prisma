@@ -12,6 +12,38 @@ model User {
   id        String     @id @default(cuid())
   createdAt DateTime   @default(now())
   trainings Training[]
+  weight WeightMeasurement[]
+  bodyMeasurments BodyMeasurement[]
+  kcalMeasurments KcalMeasurement[]
+}
+
+model KcalMeasurement {
+  id        String   @id @default(uuid())
+  kcal      Int
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BodyMeasurement {
+  id        String   @id @default(uuid())
+  neck    Int?
+  chest   Int?
+  waist   Int?
+  hips    Int?
+  thigh   Int?
+  biceps Int?
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WeightMeasurement {
+  id        String   @id @default(uuid())
+  weight    Int
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Training {
