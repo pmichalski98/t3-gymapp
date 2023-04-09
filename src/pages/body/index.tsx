@@ -41,6 +41,10 @@ function Index() {
       label: "Pomiary",
       render: (kcal: Kcal) => <span>{`${kcal.kcal} kcal`}</span>,
     },
+    {
+      label: "Diff",
+      render: () => <span>TO DO</span>,
+    },
   ];
 
   const weightConfig = [
@@ -53,6 +57,10 @@ function Index() {
     {
       label: "Pomiary",
       render: (weight: Weight) => <span>{`${weight.weight} kg`}</span>,
+    },
+    {
+      label: "Diff",
+      render: () => <span>TO DO</span>,
     },
   ];
   const bodyConfig = [
@@ -71,8 +79,8 @@ function Index() {
   return (
     <ContentLayout>
       <h1 className="my-10 text-3xl text-cyan-400">{user?.fullName}</h1>
-      <div className="flex">
-        <div className="container mx-auto grid max-w-3xl grid-cols-[1fr_1fr] gap-4 px-2 py-6 text-center text-sm md:text-lg">
+      <div className=" md:flex">
+        <div className="container mx-auto grid max-w-3xl grid-cols-[1fr_1fr_1fr] gap-4 px-2 py-6 text-center text-lg md:text-xl">
           <BodyStats
             setter={setWeight}
             config={weightConfig}
@@ -82,7 +90,7 @@ function Index() {
             title="Weight"
           />
         </div>
-        <div className="container mx-auto grid max-w-3xl grid-cols-[1fr_1fr] gap-4 px-2 py-6 text-center text-sm md:text-lg">
+        <div className="container mx-auto grid max-w-3xl grid-cols-[1fr_1fr_1fr] gap-4 px-2 py-6 text-center text-lg md:text-xl">
           <BodyStats
             setter={setKcal}
             config={kcalConfig}
@@ -125,6 +133,8 @@ export function BodyStats<T extends { id: string }>({
     );
   });
 
+  console.log(data);
+
   const rows = data?.map((rowData) => {
     const renderedCells = config.map((column) => {
       return (
@@ -142,15 +152,15 @@ export function BodyStats<T extends { id: string }>({
 
   return (
     <>
-      <h2 className="col-span-2">{title}</h2>
+      <h2 className="col-span-3 text-2xl">{title}</h2>
       <div className="contents">{renderedLabels}</div>
       {rows}
       <Button
         onClick={() => setExpanded(!expanded)}
         variant="primary"
-        className="col-span-2 "
+        className="col-span-2 mx-auto w-1/2"
       >
-        Add new value
+        Add
       </Button>
       {expanded && (
         <AddNewMeasurement setter={setter} closeWindow={setExpanded} />
@@ -172,16 +182,16 @@ export function AddNewMeasurement({ setter, closeWindow }: Props) {
   }
 
   return (
-    <div className="col-span-2 flex w-full items-center justify-between">
+    <div className="col-span-2 flex items-center  gap-2">
       <input
-        className="border-b border-cyan-400 bg-inherit text-center text-cyan-400 outline-none"
+        className="basis-2/3 border-b border-cyan-400 bg-inherit text-center text-cyan-400 outline-none"
         type="number"
         value={value}
         onChange={(e: ChangeEvent<HTMLInputElement>) =>
           setValue(Number(e.target.value))
         }
       />
-      <Button onClick={handleSave} variant="primary" className="mr-10">
+      <Button onClick={handleSave} variant="primary" className=" basis-1/3">
         Save
       </Button>
     </div>
