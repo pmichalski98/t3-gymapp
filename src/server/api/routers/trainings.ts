@@ -70,11 +70,13 @@ export const trainingsRouter = createTRPCRouter({
         orderBy: { createdAt: "desc" },
         include: { exercises: true },
       });
-      if (!trainingUnit) {
-        return ctx.prisma.training.findUnique({
+      if (trainingUnit.length === 0) {
+        const training = await ctx.prisma.training.findUnique({
           where: { id: input },
           include: { exercises: true },
         });
+        if (!training) throw new TRPCError({ code: "NOT_FOUND" });
+        return training;
       }
       return trainingUnit[0];
     }),

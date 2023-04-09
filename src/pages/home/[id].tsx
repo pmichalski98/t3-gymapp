@@ -39,6 +39,8 @@ function Id() {
         await utils.trainings.invalidate();
       },
     });
+  console.log(id);
+  console.log(training);
 
   const [updatedTraining, setUpdatedTraining] = useState<
     | (Training & { exercises: Exercise[] })
