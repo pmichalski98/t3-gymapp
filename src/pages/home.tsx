@@ -3,7 +3,7 @@ import { type NextPage } from "next";
 import { api, type RouterOutputs } from "~/utils/api";
 import { ClipLoader } from "react-spinners";
 import Link from "next/link";
-import ContentLayout from "~/components/ContentLayout";
+import ContentLayout from "~/components/Layout";
 import Button from "~/components/Button";
 import React, { type ChangeEvent, useState } from "react";
 import { type Exercise } from "@prisma/client";
@@ -21,7 +21,7 @@ const Home: NextPage = () => {
   if (error) return <div>Something went wrong...</div>;
 
   return (
-    <ContentLayout>
+    <>
       {isLoading ? (
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
       ) : (
@@ -39,7 +39,7 @@ const Home: NextPage = () => {
           <TrainingHistory />
         </>
       )}
-    </ContentLayout>
+    </>
   );
 };
 export default Home;

@@ -1,52 +1,24 @@
+import React, { type ComponentProps } from "react";
 import classNames from "classnames";
-import React, { type ReactNode } from "react";
-
-interface Props {
-  children: ReactNode;
-  variant: "primary" | "secondary" | "success" | "accent";
-  outlined?: boolean;
-  rounded?: boolean;
-  className?: string;
-  type?: "button" | "submit" | "reset";
-  disabled?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  hidden?: boolean;
-}
-
-function Button({
-  children,
-  outlined,
-  rounded,
-  className,
-  variant,
-  hidden,
-  ...rest
-}: Props) {
+const Button = (
+  props: ComponentProps<"button"> & {
+    variant?: "primary" | "secondary";
+  }
+) => {
+  const variant =
+    props.variant === "secondary"
+      ? "bg-neutral-600 hover:bg-neutral-700 disabled:bg-neutral-700 hover:text-slate-200"
+      : " bg-pink-700 hover:bg-pink-800 hover:text-slate-200 disabled:bg-pink-950";
   const classes = classNames(
-    "flex justify-center transition items-center text-white",
-    "shadow-2xl text-backgroundBlue ",
-    "focus:outline-cyan outline-none px-3 py-1.5 rounded tranisition",
-    {
-      "border-cyan bg-gradient-to-r from-darkOcean to-lightCyan hover:text-bg hover:outline-slate-400":
-        variant === "primary",
-      "border-2 border-lightCyan bg-backgroundBlue text-white hover:text-lightCyan hover:border-black":
-        variant === "secondary",
-      "border-cyanLight bg-darkCyan text-black hover:outline-white hover:text-bg":
-        variant === "success",
-      "bg-lightOcean border-2 border-darkCyan border-solid hover:text-bg":
-        variant === "accent",
-      "border-2": outlined,
-      "rounded-full": rounded,
-      hidden: hidden,
-    },
-    className
+    "shadow-lg transition w-fit px-3 py-1.5 rounded ",
+    variant,
+    props.className
   );
-
   return (
-    <button {...rest} className={classes}>
-      {children}
+    <button {...props} className={classes}>
+      {props.children}
     </button>
   );
-}
+};
 
 export default Button;

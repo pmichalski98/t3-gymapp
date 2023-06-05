@@ -1,5 +1,5 @@
 import React, { type ChangeEvent, useState } from "react";
-import ContentLayout from "~/components/ContentLayout";
+import ContentLayout from "~/components/Layout";
 import { useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import { GoChevronDown } from "react-icons/go";

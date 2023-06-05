@@ -3,6 +3,8 @@ import { SignOutButton, useUser } from "@clerk/nextjs";
 import ButtonStyleWrapper from "~/components/ButtonStyleWrapper";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import MyLink from "~/components/MyLink";
+import Button from "~/components/Button";
 function Navbar() {
   const router = useRouter();
   const currentRoute = router.pathname;
@@ -16,39 +18,26 @@ function Navbar() {
     { label: "Body", path: "/body" },
   ];
 
-  const notActive =
-    "transition text-xl hover:text-lightCyan focus:outline-cyan outline-none rounded p-1";
-  const active = `font-bold border-l-4 border-lightCyan pl-2 text-lightCyan ${notActive} `;
-
   const renderedLinks = links.map((link) => (
-    <Link
-      href={link.path}
-      key={link.label}
-      className={currentRoute === link.path ? active : notActive}
-    >
+    <MyLink href={link.path} key={link.label}>
       {link.label}
-    </Link>
+    </MyLink>
   ));
 
   return (
-    <nav
-      className="content fixed top-0 mx-auto flex w-full items-center justify-center justify-around overflow-hidden border-b-4 border-lightCyan bg-primary px-1
-     pb-1 "
-    >
+    <nav className="mx-auto flex w-full items-center justify-around  px-1  pb-1 md:text-lg ">
       {renderedLinks}
-      <div className="flex gap-3">
-        <ButtonStyleWrapper className="m-0 h-3/4 flex-nowrap self-center px-[5px] py-1">
+      <div className="flex  gap-3">
+        <ButtonStyleWrapper variant="secondary">
           <SignOutButton />
         </ButtonStyleWrapper>
-        <div>
-          <Image
-            className="mx-auto rounded-full"
-            src={user.profileImageUrl}
-            alt="Profile Image"
-            width={50}
-            height={50}
-          />
-        </div>
+        <Image
+          className="mx-auto rounded-full"
+          src={user.profileImageUrl}
+          alt="Profile Image"
+          width={50}
+          height={50}
+        />
       </div>
     </nav>
   );

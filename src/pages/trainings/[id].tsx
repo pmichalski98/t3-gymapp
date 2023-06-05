@@ -2,7 +2,7 @@ import React, { type FC } from "react";
 import { useRouter } from "next/router";
 import { api, type RouterOutputs } from "~/utils/api";
 import { ClipLoader } from "react-spinners";
-import ContentLayout from "~/components/ContentLayout";
+import ContentLayout from "~/components/Layout";
 import { Exercise } from "@prisma/client";
 
 const Id = () => {
@@ -16,13 +16,13 @@ const Id = () => {
   if (!data) return <div>Something went wrong ...</div>;
 
   return (
-    <ContentLayout>
+    <>
       {isLoading && !data ? (
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
       ) : (
         <EditPanel training={data} />
       )}
-    </ContentLayout>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ContentLayout from "~/components/ContentLayout";
+import ContentLayout from "~/components/Layout";
 import { AddTraining, TrainingList } from "~/pages/home";
 import Button from "~/components/Button";
 import { api } from "~/utils/api";
@@ -11,7 +11,7 @@ function Index() {
   const { error, isLoading, data } = api.trainings.getAll.useQuery();
 
   return (
-    <ContentLayout>
+    <>
       {isLoading ? (
         <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
       ) : (
@@ -28,7 +28,7 @@ function Index() {
           {isAdding && <AddTraining closeWindow={setIsAdding} />}
         </>
       )}
-    </ContentLayout>
+    </>
   );
 }
 

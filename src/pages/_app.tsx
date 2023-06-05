@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { dark } from "@clerk/themes";
 import { ToastContainer } from "react-toastify";
 import React from "react";
+import Layout from "~/components/Layout";
 
 const publicPages: Array<string> = [];
 
@@ -25,30 +26,28 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   // Maybe I will add some public pages
   return (
-    <div className="min-h-screen bg-primary text-slate-200">
-      <ClerkProvider
-        appearance={{
-          baseTheme: dark,
-        }}
-      >
-        {isPublicPage ? (
-          <>
-            <Component {...pageProps} />
-          </>
-        ) : (
-          <>
-            <SignedIn>
-              <Navbar />
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
+      {isPublicPage ? (
+        <>
+          <Component {...pageProps} />
+        </>
+      ) : (
+        <>
+          <SignedIn>
+            <Layout>
               <Component {...pageProps} />
-            </SignedIn>
-            <SignedOut>
-              <RedirectToSignIn />
-            </SignedOut>
-          </>
-        )}
-        <ToastContainer autoClose={1000} />
-      </ClerkProvider>
-    </div>
+            </Layout>
+          </SignedIn>
+          <SignedOut>
+            <RedirectToSignIn />
+          </SignedOut>
+        </>
+      )}
+    </ClerkProvider>
   );
 };
 
