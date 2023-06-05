@@ -2,8 +2,6 @@ import { type NextPage } from "next";
 
 import { api, type RouterOutputs } from "~/utils/api";
 import { ClipLoader } from "react-spinners";
-import Link from "next/link";
-import ContentLayout from "~/components/Layout";
 import Button from "~/components/Button";
 import React, { type ChangeEvent, useState } from "react";
 import { type Exercise } from "@prisma/client";
@@ -23,21 +21,22 @@ const Home: NextPage = () => {
   return (
     <>
       {isLoading ? (
-        <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
+        <div className="flex min-h-screen items-center justify-center">
+          <ClipLoader size={200} color="pink" className=" " />
+        </div>
       ) : (
-        <>
-          <h1 className="mb-4 text-3xl">Choose training:</h1>
+        <section className="text-center">
+          <h1 className="mb-10 text-5xl ">Choose training:</h1>
           {data && <TrainingList data={data} remove={true} start={true} />}
           <Button
             onClick={() => setIsAdding(!isAdding)}
-            variant="accent"
             className="mx-auto my-10 text-2xl"
           >
             Add Training +
           </Button>
           {isAdding && <AddTraining closeWindow={setIsAdding} />}
           <TrainingHistory />
-        </>
+        </section>
       )}
     </>
   );
@@ -57,14 +56,14 @@ export function TrainingList({ data, remove, start, edit }: TrainingListProps) {
     index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
   const renderedTrainings = data.map((training, index) => {
     return (
-      <div key={training.id}>
+      <div key={training.id} className=" flex justify-center">
         <div
           onClick={() => handleTrainingClick(index)}
-          className="text-backgroundBlue focus:outline-cyan
-          border-cyan my-4 flex basis-1/3 cursor-pointer
-                    justify-center rounded bg-gradient-to-r from-darkOcean to-lightCyan
-                    py-4 px-3 text-6xl text-white outline-none
-                    transition hover:text-bg hover:outline-slate-400 md:py-9 md:px-6 md:text-7xl"
+          className="
+           my-4 flex basis-1/3 cursor-pointer
+                    justify-center rounded bg-gradient-to-r from-gray-500 to-neutral-600 py-4 px-3
+                    text-4xl font-medium text-white shadow-md shadow-gray-600 outline-none
+                    transition hover:from-neutral-700 hover:to-neutral-700 md:py-9 md:px-6 "
         >
           {training.label}
         </div>
@@ -155,7 +154,6 @@ export function AddTraining({
           onClick={handleAddingExercise}
           className="mx-auto mt-4"
           variant="primary"
-          rounded
         >
           Add exercise
         </Button>
@@ -168,12 +166,7 @@ export function AddTraining({
               onDelete={handleExerciseDelete}
             />
           </div>
-          <Button
-            type="submit"
-            variant="success"
-            rounded
-            className="mx-auto mt-4 text-xl"
-          >
+          <Button type="submit" className="mx-auto mt-4 text-xl">
             Create training
           </Button>
         </form>

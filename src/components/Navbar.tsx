@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import MyLink from "~/components/MyLink";
 import Button from "~/components/Button";
+
 function Navbar() {
   const router = useRouter();
   const currentRoute = router.pathname;
@@ -25,7 +26,7 @@ function Navbar() {
   ));
 
   return (
-    <nav className="mx-auto flex w-full items-center justify-around  px-1  pb-1 md:text-lg ">
+    <nav className="mx-auto flex w-full items-center justify-around px-1    text-lg md:text-xl ">
       {renderedLinks}
       <div className="flex  gap-3">
         <ButtonStyleWrapper variant="secondary">

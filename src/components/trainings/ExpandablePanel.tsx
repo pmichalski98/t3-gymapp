@@ -26,26 +26,26 @@ export default function ExpandablePanel({
       },
     });
   return (
-    <div className="flex justify-around pb-4">
-      {remove && (
-        <Button
-          onClick={() => deleteTraining(training.id)}
-          variant="success"
-          disabled={deleteLoading}
-        >
-          Usuń
-        </Button>
-      )}
+    <div className="  rounded  p-4 ">
       {start && (
-        <Button variant="success">
+        <Button className="mb-4 ">
           <Link
             href={{
               pathname: "/home/[id]",
               query: { id: training.id },
             }}
           >
-            Rozpocznij
+            Start
           </Link>
+        </Button>
+      )}
+      {remove && (
+        <Button
+          className=" flex"
+          onClick={() => deleteTraining(training.id)}
+          disabled={deleteLoading}
+        >
+          Delete
         </Button>
       )}
       {edit && (

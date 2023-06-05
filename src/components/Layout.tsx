@@ -14,7 +14,7 @@ function ContentLayout({ children }: { children: ReactNode }) {
       <header className="min-w-[400px] bg-neutral-900/50 shadow-md shadow-gray-500">
         <Navbar />
       </header>
-      <main className=" mx-auto mt-20 w-11/12 ">{children}</main>
+      <main className=" mx-auto mt-10 w-11/12  ">{children}</main>
       <ToastContainer
         position="top-center"
         hideProgressBar={false}
