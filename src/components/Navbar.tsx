@@ -14,8 +14,7 @@ function Navbar() {
 
   const links = [
     { label: "Stats", path: "/stats" },
-    { label: "Trainings", path: "/trainings" },
-    { label: "Home", path: "/home" },
+    { label: "Trainings", path: "/home" },
     { label: "Body", path: "/body" },
   ];
 
@@ -26,7 +25,7 @@ function Navbar() {
   ));
 
   return (
-    <nav className="mx-auto flex w-full items-center justify-around px-1    text-lg md:text-xl ">
+    <nav className="mx-auto flex w-full items-center justify-around px-1 py-2   text-lg md:text-xl ">
       {renderedLinks}
       <div className="flex  gap-3">
         <ButtonStyleWrapper variant="secondary">

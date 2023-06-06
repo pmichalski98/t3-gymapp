@@ -39,8 +39,6 @@ function Id() {
         await utils.trainings.invalidate();
       },
     });
-  console.log(id);
-  console.log(training);
 
   const [updatedTraining, setUpdatedTraining] = useState<
     | (Training & { exercises: Exercise[] })
@@ -155,8 +153,6 @@ function Id() {
       render: (exercise: Exercise, index: number) =>
         index !== editRow ? (
           <Button
-            variant="success"
-            rounded
             key={`${index}edit`}
             onClick={() => handleEditBtn(exercise, index)}
           >
@@ -173,9 +169,10 @@ function Id() {
     <div className="mx-auto flex h-screen items-center justify-center rounded pb-20 text-center">
       <div className="">
         {isLoading ? (
-          <ClipLoader size={150} color="cyan" className="mx-auto mt-20" />
+          <ClipLoader size={150} color="pink" className="mx-auto mt-20" />
         ) : (
           <>
+            <input type="tel" className="bg-inherit" />
             <TrainingTimeTicker startTime={startTime.getTime()} />
             <h1 className="my-6 p-4 text-center text-5xl capitalize md:text-6xl">
               {training?.label}
@@ -195,7 +192,6 @@ function Id() {
               className="mx-auto mt-10 text-xl"
               variant="primary"
               hidden={expandedIndex}
-              rounded
               onClick={() => setExpandedIndex(!expandedIndex)}
               disabled={editTrainingLoading}
             >
@@ -212,7 +208,6 @@ function Id() {
                 </h2>
                 <Button
                   onClick={() => void submitTraining()}
-                  variant="success"
                   className="mx-auto"
                 >
                   Tak

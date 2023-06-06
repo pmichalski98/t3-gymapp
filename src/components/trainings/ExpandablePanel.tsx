@@ -14,7 +14,6 @@ interface ExpandableProps {
 export default function ExpandablePanel({
   remove,
   start,
-  edit,
   training,
 }: ExpandableProps) {
   const utils = api.useContext();
@@ -26,9 +25,9 @@ export default function ExpandablePanel({
       },
     });
   return (
-    <div className="  rounded  p-4 ">
+    <div className="  flex  flex-col gap-2 rounded p-4  ">
       {start && (
-        <Button className="mb-4 ">
+        <Button>
           <Link
             href={{
               pathname: "/home/[id]",
@@ -41,23 +40,10 @@ export default function ExpandablePanel({
       )}
       {remove && (
         <Button
-          className=" flex"
           onClick={() => deleteTraining(training.id)}
           disabled={deleteLoading}
         >
           Delete
-        </Button>
-      )}
-      {edit && (
-        <Button variant="success">
-          <Link
-            href={{
-              pathname: "/trainings/[id]",
-              query: { id: training.id },
-            }}
-          >
-            Edit
-          </Link>
         </Button>
       )}
     </div>

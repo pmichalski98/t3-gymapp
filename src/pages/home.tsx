@@ -11,6 +11,7 @@ import { ShowExercises } from "~/components/trainings/ShowExercises";
 import { toast } from "react-toastify";
 import TrainingHistory from "~/components/TrainingHistory";
 import ExpandablePanel from "~/components/trainings/ExpandablePanel";
+import FileDropZone from "~/components/FileDropZone";
 
 const Home: NextPage = () => {
   api.users.login.useQuery();
@@ -27,7 +28,8 @@ const Home: NextPage = () => {
       ) : (
         <section className="text-center">
           <h1 className="mb-10 text-5xl ">Choose training:</h1>
-          {data && <TrainingList data={data} remove={true} start={true} />}
+          <FileDropZone />
+          {data && <TrainingList data={data} remove start />}
           <Button
             onClick={() => setIsAdding(!isAdding)}
             className="mx-auto my-10 text-2xl"
@@ -46,40 +48,35 @@ export default Home;
 interface TrainingListProps {
   data: RouterOutputs["trainings"]["getAll"];
   remove?: boolean;
-  edit?: boolean;
   start?: boolean;
   editPanel?: (value: boolean) => void;
 }
-export function TrainingList({ data, remove, start, edit }: TrainingListProps) {
+export function TrainingList({ data, remove, start }: TrainingListProps) {
   const [expandedIndex, setExpandedIndex] = useState(NaN);
   const handleTrainingClick = (index: number) =>
     index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
   const renderedTrainings = data.map((training, index) => {
     return (
-      <div key={training.id} className=" flex justify-center">
+      <section key={training.id} className=" flex justify-center">
         <div
           onClick={() => handleTrainingClick(index)}
           className="
-           my-4 flex basis-1/3 cursor-pointer
+           flex-1- my-4 flex-1 basis-1/3 cursor-pointer
                     justify-center rounded bg-gradient-to-r from-gray-500 to-neutral-600 py-4 px-3
                     text-4xl font-medium text-white shadow-md shadow-gray-600 outline-none
                     transition hover:from-neutral-700 hover:to-neutral-700 md:py-9 md:px-6 "
         >
           {training.label}
         </div>
+
         {expandedIndex === index && (
-          <ExpandablePanel
-            training={training}
-            remove={remove}
-            start={start}
-            edit={edit}
-          />
+          <ExpandablePanel training={training} remove={remove} start={start} />
         )}
-      </div>
+      </section>
     );
   });
   return (
-    <div className="flex-wrap justify-around gap-6 md:flex">
+    <div className="mx-auto max-w-2xl flex-wrap justify-around gap-6 md:flex">
       {renderedTrainings}
     </div>
   );
@@ -128,45 +125,43 @@ export function AddTraining({
     setExercises(exercisesAfterDelete);
   }
   return (
-    <div className="mx-auto mt-6 max-w-4xl rounded border-4 border-darkCyan p-8 text-center">
+    <div className="mx-auto mt-6 max-w-md rounded bg-slate-400/10 p-8  text-center">
       <GiCancel
-        className="relative bottom-4 h-6 w-6 cursor-pointer"
+        className=" h-6 w-6 cursor-pointer"
         onClick={() => closeWindow(false)}
       />
-      <div className="pb-8">
-        <Input
-          className="my-2 mx-auto block max-w-sm text-xl"
-          onChange={trainingOnChange}
-          type="text"
-          value={trainingName}
-          placeholder="Nazwa treningu"
-          required
-        />
-        <Input
-          className="my-2 mt-4 max-w-xs text-sm"
-          onChange={exerciseOnChange}
-          type="text"
-          value={exerciseName}
-          placeholder="Nazwa cwiczenia"
-          required
-        />
-        <Button
-          onClick={handleAddingExercise}
-          className="mx-auto mt-4"
-          variant="primary"
-        >
+      <div className="flex justify-center gap-4 pb-8">
+        <div>
+          <Input
+            className="my-2 mx-auto block max-w-sm text-xl"
+            onChange={trainingOnChange}
+            type="text"
+            value={trainingName}
+            placeholder="Training name"
+            required
+          />
+          <Input
+            className="my-2 mt-4 max-w-xs text-sm"
+            onChange={exerciseOnChange}
+            type="text"
+            value={exerciseName}
+            placeholder="Exercise name"
+            required
+          />
+        </div>
+        <Button onClick={handleAddingExercise} className=" self-start">
           Add exercise
         </Button>
       </div>
       {exercises.length > 0 && (
-        <form className=" text-center" onSubmit={handleAddTraining}>
-          <div className="flex flex-col items-center ">
+        <form className=" flex justify-between" onSubmit={handleAddTraining}>
+          <div className="">
             <ShowExercises
               exercises={exercises}
               onDelete={handleExerciseDelete}
             />
           </div>
-          <Button type="submit" className="mx-auto mt-4 text-xl">
+          <Button type="submit" className="h-fit text-lg">
             Create training
           </Button>
         </form>
