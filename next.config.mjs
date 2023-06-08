@@ -6,6 +6,9 @@
 
 /** @type {import("next").NextConfig} */
 const config = {
+  experimental: {
+    esmExternals : false,
+  },
   images: {
     domains: ["images.clerk.dev"],
   },

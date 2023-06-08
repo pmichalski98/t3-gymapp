@@ -1,37 +1,53 @@
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import {
+  type ChangeEvent,
+  ChangeEventHandler,
+  type FormEvent,
+  useCallback,
+  useState,
+} from "react";
+import Image from "next/image";
+import { api } from "~/utils/api";
+import FormData from "form-data";
+import Button from "~/components/Button";
 
-function MyDropzone() {
-  const [file, setfile] = useState();
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result;
-        const blob = new Blob([result]);
-        const url = URL.createObjectURL(blob);
-        setfile(url);
+function FileDropZone() {
+  const [file, setfile] = useState<File | string>();
 
-        console.log(result);
-      };
-      reader.readAsArrayBuffer(file);
-      console.log();
+  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+    setfile(e.currentTarget.files?.[0]);
+  }
+  const { mutateAsync: getPresignedUrl } =
+    api.uploadPhotos.uploadPhoto.useMutation();
+
+  async function handleFileUpload(e: FormEvent) {
+    e.preventDefault();
+    const { url, fields } = await getPresignedUrl();
+    if (!file) return;
+    console.log(file);
+    const abu = {
+      ...fields,
+      "Content-Type": file.type,
+      file,
+    };
+    const formData = new FormData();
+    for (const name in abu) {
+      formData.append(name, abu[name]);
+    }
+    console.log(formData, "halo");
+    const res = await fetch(url, {
+      body: formData,
+      method: "POST",
+      mode: "no-cors",
     });
-    // Do something with the files
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+    console.log(res);
+    setfile("");
+  }
 
-  console.log(file);
   return (
-    <div {...getRootProps()} className="bg-rose-400">
-      <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Drop the files here ...</p>
-      ) : (
-        <p>Drag and drop some files here, or click to select files</p>
-      )}
-      {file && <img src={file} alt="" />}
-    </div>
+    <form onSubmit={handleFileUpload}>
+      <input type="file" onChange={handleFileChange} />
+      <Button>Upload file</Button>
+    </form>
   );
 }
-export default MyDropzone;
+export default FileDropZone;

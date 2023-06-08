@@ -6,6 +6,8 @@ import { z } from "zod";
  */
 const server = z.object({
   DATABASE_URL: z.string().url(),
+  S3_ACCESS_KEY: z.string(),
+  S3_SECRET_KEY: z.string(),
   NODE_ENV: z.enum(["development", "test", "production"]),
 });
 
@@ -26,6 +28,8 @@ const client = z.object({
 const processEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
+  S3_ACCESS_KEY:process.env.S3_ACCESS_KEY,
+  S3_SECRET_KEY:process.env.S3_SECRET_KEY,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
