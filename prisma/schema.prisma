@@ -15,6 +15,14 @@ model User {
   weight    Weight[]
   body      Body[]
   kcal      Kcal[]
+  photo     Photo[]
+}
+
+model Photo {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Kcal {

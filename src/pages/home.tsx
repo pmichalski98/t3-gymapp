@@ -28,7 +28,6 @@ const Home: NextPage = () => {
       ) : (
         <section className="text-center">
           <h1 className="mb-10 text-5xl ">Choose training:</h1>
-          <FileDropZone />
           {data && <TrainingList data={data} remove start />}
           <Button
             onClick={() => setIsAdding(!isAdding)}
@@ -57,8 +56,8 @@ export function TrainingList({ data, remove, start }: TrainingListProps) {
     index === expandedIndex ? setExpandedIndex(NaN) : setExpandedIndex(index);
   const renderedTrainings = data.map((training, index) => {
     return (
-      <section key={training.id} className=" flex justify-center">
-        <div
+      <div key={training.id} className=" flex justify-center">
+        <span
           onClick={() => handleTrainingClick(index)}
           className="
            flex-1- my-4 flex-1 basis-1/3 cursor-pointer
@@ -67,12 +66,12 @@ export function TrainingList({ data, remove, start }: TrainingListProps) {
                     transition hover:from-neutral-700 hover:to-neutral-700 md:py-9 md:px-6 "
         >
           {training.label}
-        </div>
+        </span>
 
         {expandedIndex === index && (
           <ExpandablePanel training={training} remove={remove} start={start} />
         )}
-      </section>
+      </div>
     );
   });
   return (

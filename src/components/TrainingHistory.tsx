@@ -61,31 +61,32 @@ const TrainingHistory: React.FC = () => {
         data.map((trainingUnit, index) => {
           const isExpanded = index === expandedIndex;
           return (
-            <div key={trainingUnit.id} className="container mx-auto  ">
-              <div className=" mx-auto max-w-xl  gap-4 rounded border p-2">
-                <div
-                  onClick={() => handleExpandClick(index)}
-                  className={`mx-auto flex cursor-pointer justify-between px-5 py-2 md:text-xl ${
-                    isExpanded ? "border-b-2 border-slate-200/20" : ""
-                  }`}
-                >
-                  <div className="flex gap-4">
-                    <p className="text-rose-400/90 ">{`${trainingUnit.label} `}</p>
-                    <p>{formatDate(trainingUnit.createdAt)}</p>
-                  </div>
-                  <span className="self-center text-xl">
-                    {isExpanded ? <GoChevronDown /> : <GoChevronLeft />}
-                  </span>
+            <div
+              key={trainingUnit.id}
+              className="container mx-auto max-w-xl  gap-4 rounded border p-2"
+            >
+              <div
+                onClick={() => handleExpandClick(index)}
+                className={`mx-auto flex cursor-pointer justify-between px-5 py-2 md:text-xl ${
+                  isExpanded ? "border-b-2 border-slate-200/20" : ""
+                }`}
+              >
+                <div className="flex gap-4">
+                  <p className="text-rose-400/90 ">{`${trainingUnit.label} `}</p>
+                  <span>{formatDate(trainingUnit.createdAt)}</span>
                 </div>
-                {isExpanded && (
-                  <div className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr] gap-4 px-2 py-6 text-center text-sm md:text-lg">
-                    <TrainingTable
-                      data={trainingUnit.exercises}
-                      config={config}
-                    />
-                  </div>
-                )}
+                <span className="self-center text-xl">
+                  {isExpanded ? <GoChevronDown /> : <GoChevronLeft />}
+                </span>
               </div>
+              {isExpanded && (
+                <div className="container mx-auto grid max-w-3xl grid-cols-[0.5fr_1fr_1fr_1fr_1fr] gap-4 px-2 py-6 text-center text-sm md:text-lg">
+                  <TrainingTable
+                    data={trainingUnit.exercises}
+                    config={config}
+                  />
+                </div>
+              )}
             </div>
           );
         })}

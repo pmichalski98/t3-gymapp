@@ -6,11 +6,8 @@
 
 /** @type {import("next").NextConfig} */
 const config = {
-  experimental: {
-    esmExternals : false,
-  },
   images: {
-    domains: ["images.clerk.dev"],
+    domains: ["images.clerk.dev", "training-manager.s3.eu-central-1.amazonaws.com"],
   },
   reactStrictMode: true,
 

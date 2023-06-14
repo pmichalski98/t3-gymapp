@@ -8,6 +8,8 @@ import Button from "~/components/Button";
 import { BsPlusCircle } from "react-icons/all";
 import { toast } from "react-toastify";
 import { func } from "prop-types";
+import FileDropZone from "~/components/FileDropZone";
+import PhotoDiffPage from "~/components/PhotoDiffPage";
 
 function Index() {
   const utils = api.useContext();
@@ -77,8 +79,9 @@ function Index() {
   ];
 
   return (
-    <ContentLayout>
-      <h1 className="my-10 text-3xl text-cyan-400">{user?.fullName}</h1>
+    <>
+      <h1 className="my-10 text-3xl text-rose-400">{user?.fullName}</h1>
+      <PhotoDiffPage />
       <div className=" md:flex">
         <div className="container mx-auto grid max-w-3xl grid-cols-[1fr_1fr_1fr] gap-4 px-2 py-6 text-center text-lg md:text-xl">
           <BodyStats
@@ -104,7 +107,7 @@ function Index() {
         {/*  <BodyStats config={bodyConfig} data={data.body} title="Body" />*/}
         {/*</div>*/}
       </div>
-    </ContentLayout>
+    </>
   );
 }
 export default Index;
