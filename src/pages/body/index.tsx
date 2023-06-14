@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { func } from "prop-types";
 import FileDropZone from "~/components/FileDropZone";
 import PhotoDiffPage from "~/components/PhotoDiffPage";
+import { ClipLoader } from "react-spinners";
 
 function Index() {
   const utils = api.useContext();
@@ -28,7 +29,12 @@ function Index() {
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <ClipLoader size={200} color="pink" className=" " />
+      </div>
+    );
   if (error) return <div>Error</div>;
   if (!data) return <div>No data</div>;
 

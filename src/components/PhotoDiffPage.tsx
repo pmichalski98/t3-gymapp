@@ -8,13 +8,21 @@ import { ClipLoader } from "react-spinners";
 
 const PhotoDiffPage = () => {
   const utils = useUtils();
-  const { data: photos } = api.photos.getPhotos.useQuery();
+  const { data: photos, isLoading: photosIsLoading } =
+    api.photos.getPhotos.useQuery();
   const { mutate: deletePhoto, isLoading: deleteIsLoading } =
     api.photos.deletePhoto.useMutation({
       onSuccess: async () => {
         await utils.photos.invalidate();
       },
     });
+  if (photosIsLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <ClipLoader size={200} color="pink" className=" " />
+      </div>
+    );
+  }
 
   return (
     <section className={""}>
