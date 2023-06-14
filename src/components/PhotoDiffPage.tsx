@@ -4,7 +4,6 @@ import Image from "next/image";
 import { api } from "~/utils/api";
 import Button from "~/components/Button";
 import useUtils from "~/hooks/useUtils";
-import { CgSpinner } from "react-icons/all";
 import { ClipLoader } from "react-spinners";
 
 const PhotoDiffPage = () => {

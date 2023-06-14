@@ -1,17 +1,9 @@
-import {
-  type ChangeEvent,
-  type FormEvent,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import { api } from "~/utils/api";
 import FormData from "form-data";
 import Button from "~/components/Button";
 import Image from "next/image";
-import { toBase64 } from "pvutils";
-import Dropzone from "react-dropzone";
-import { AiFillDelete } from "react-icons/all";
+import { AiFillDelete } from "react-icons/ai";
 
 interface Fields {
   "Content-Type": string;
