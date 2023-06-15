@@ -23,7 +23,7 @@ export const photosRouter = createTRPCRouter({
       },
       Conditions: [
         ["starts-with", "$Content-Type", "image/"],
-        ["content-length-range", 0, 1000000],
+        ["content-length-range", 0, 10000000],
       ],
       Expires: 30,
     });
@@ -34,7 +34,7 @@ export const photosRouter = createTRPCRouter({
         userId: ctx.userId,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
     if (!photos) throw new TRPCError({ code: "NOT_FOUND" });
