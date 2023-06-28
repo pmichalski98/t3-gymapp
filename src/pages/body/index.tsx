@@ -1,14 +1,10 @@
 import React, { type ChangeEvent, useState } from "react";
-import ContentLayout from "~/components/Layout";
 import { useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import { GoChevronDown } from "react-icons/go";
 import { type Body, type Kcal, type Weight } from ".prisma/client";
 import Button from "~/components/Button";
-import { BsPlusCircle } from "react-icons/all";
 import { toast } from "react-toastify";
-import { func } from "prop-types";
-import FileDropZone from "~/components/FileDropZone";
 import PhotoDiffPage from "~/components/PhotoDiffPage";
 import { ClipLoader } from "react-spinners";
 

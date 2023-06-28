@@ -11,6 +11,7 @@ import { ShowExercises } from "~/components/trainings/ShowExercises";
 import { toast } from "react-toastify";
 import TrainingHistory from "~/components/TrainingHistory";
 import ExpandablePanel from "~/components/trainings/ExpandablePanel";
+import ErrorMsg from "~/components/ErrorMsg";
 
 const Index: NextPage = () => {
   api.users.login.useQuery();
@@ -87,6 +88,7 @@ export function AddTraining({
   const [exercises, setExercises] = useState<Pick<Exercise, "label">[]>([]);
   const [exerciseName, setExerciseName] = useState("");
   const [trainingName, setTrainingName] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const utils = api.useContext();
   const { mutate } = api.trainings.addTraining.useMutation({
     onSuccess: async () => {
@@ -102,6 +104,11 @@ export function AddTraining({
     setTrainingName(event.target.value);
   }
   function handleAddingExercise() {
+    if (exerciseName === "") {
+      setErrorMsg("Exercise name cannot be empty");
+      return;
+    }
+    setErrorMsg("");
     setExercises([
       ...exercises,
       {
@@ -113,6 +120,10 @@ export function AddTraining({
 
   function handleAddTraining(event: ChangeEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (trainingName === "") {
+      setErrorMsg("Training name cannot be empty");
+      return;
+    }
     mutate({ label: trainingName, exercises });
     closeWindow(false);
   }
@@ -130,6 +141,7 @@ export function AddTraining({
       />
       <div className="flex justify-center gap-4 pb-8">
         <div>
+          {errorMsg && <ErrorMsg message={errorMsg} />}
           <Input
             className="my-2 mx-auto block max-w-sm text-xl"
             onChange={trainingOnChange}
@@ -139,7 +151,7 @@ export function AddTraining({
             required
           />
           <Input
-            className="my-2 mt-4 max-w-xs text-sm"
+            className="my-2  max-w-xs text-sm"
             onChange={exerciseOnChange}
             type="text"
             value={exerciseName}

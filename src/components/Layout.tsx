@@ -21,11 +21,11 @@ function ContentLayout({ children }: { children: ReactNode }) {
         newestOnTop={false}
         closeOnClick
         rtl={false}
-        pauseOnFocusLoss
         draggable
+        pauseOnFocusLoss={false}
         pauseOnHover
         theme="light"
-        autoClose={5000}
+        autoClose={2000}
       />
     </div>
   );
