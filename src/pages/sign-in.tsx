@@ -1,7 +1,11 @@
 import { SignIn } from "@clerk/nextjs";
 
 const SignInPage = () => {
-  return <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />;
+  return (
+    <div className="flex min-h-screen items-center justify-center ">
+      <SignIn />
+    </div>
+  );
 };
 
 export default SignInPage;

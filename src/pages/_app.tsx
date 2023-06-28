@@ -15,6 +15,7 @@ import { dark } from "@clerk/themes";
 import { ToastContainer } from "react-toastify";
 import React from "react";
 import Layout from "~/components/Layout";
+import SignInPage from "~/pages/sign-in";
 
 const publicPages: Array<string> = [];
 
@@ -43,7 +44,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             </Layout>
           </SignedIn>
           <SignedOut>
-            <RedirectToSignIn />
+            <SignInPage />
           </SignedOut>
         </>
       )}

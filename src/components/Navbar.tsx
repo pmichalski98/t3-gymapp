@@ -14,7 +14,7 @@ function Navbar() {
 
   const links = [
     { label: "Stats", path: "/stats" },
-    { label: "Trainings", path: "/home" },
+    { label: "Trainings", path: "/" },
     { label: "Body", path: "/body" },
   ];
 
